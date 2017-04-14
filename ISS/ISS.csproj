@@ -78,6 +78,10 @@
       <Project>{0ace84c8-172f-4a25-aaf5-dea94a746861}</Project>
       <Name>App1</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Application\AppPattern.csproj">
+      <Project>{f620274b-6409-45cf-9d2c-da4c0072b44e}</Project>
+      <Name>AppPattern</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SecurityProvider\SecurityProvider.csproj">
       <Project>{a3a5e17a-8ca0-4613-81ce-8ecf81d4bc89}</Project>
       <Name>SecurityProvider</Name>
