@@ -36,15 +36,18 @@ namespace ISS
 
 
             #endregion
-
+            
             #region App1_SCHEDULER
+
+            var App1Interval = ISSConfig["App1"]["IntervalInMilliseconds"];
+            var App1Roles = ISSConfig["App1"]["Roles"].ToArray();
             //Testing to schedule app1
             Task perdiodicTask = PeriodicTaskFactory.Start(() =>
             {
-                using (var testingApp1 = new App1()) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
 
-            }, intervalInMilliseconds: 2000, // fire every two seconds...
-               maxIterations: 10);           // for a total of 10 iterations...
+            }, intervalInMilliseconds: App1Interval.Value<int>() // fire every two seconds...
+               );           // for a total of 10 iterations...
             perdiodicTask.ContinueWith(_ =>
             {
                 using (var testingApp1 = new App1()) testingApp1.Run();
