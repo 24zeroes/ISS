@@ -28,5 +28,9 @@ namespace Test
         {
 
         }
+
+        public override void Dispose()
+        {
+        }
     }
 }
