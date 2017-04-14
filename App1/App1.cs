@@ -3,14 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppPattern;
 
 namespace Test
 {
-    public class App1
+    public class App1 : Application
     {
-        public App1()
+        public override void GetConfiguration()
         {
-            Console.Write("Here i am");
+           
+        }
+
+        public override void InitialiseInputData()
+        {
+
+        }
+
+        public override void ProcessData()
+        {
+            
+        }
+
+        public override void PublishResult()
+        {
+
         }
     }
 }
