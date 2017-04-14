@@ -1,4 +1,4 @@
-namespace ISS.DB_Models.RTS_CA_Manage
+namespace DataLayer.RTS_CA_Manage
 {
     using System;
     using System.Data.Entity;

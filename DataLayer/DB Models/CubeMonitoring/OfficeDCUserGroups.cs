@@ -1,4 +1,4 @@
-namespace ISS.DB_Models.RTS_CA_Manage
+namespace DataLayer.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -6,12 +6,14 @@ namespace ISS.DB_Models.RTS_CA_Manage
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class mails_backup
+    public partial class OfficeDCUserGroups
     {
         public int id { get; set; }
 
-        public string text { get; set; }
+        public int? UserId { get; set; }
 
-        public int? alert_id { get; set; }
+        public int? GroupId { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 }

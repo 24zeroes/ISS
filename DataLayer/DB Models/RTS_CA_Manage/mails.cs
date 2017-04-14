@@ -1,4 +1,4 @@
-namespace ISS.DB_Models
+namespace DataLayer.RTS_CA_Manage
 {
     using System;
     using System.Collections.Generic;
@@ -6,14 +6,14 @@ namespace ISS.DB_Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class OfficeDCUserGroups
+    public partial class mails
     {
         public int id { get; set; }
 
-        public int? UserId { get; set; }
+        public string text { get; set; }
 
-        public int? GroupId { get; set; }
+        public int? alert_id { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public virtual alerts alerts { get; set; }
     }
 }

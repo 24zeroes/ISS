@@ -1,4 +1,4 @@
-namespace ISS.DB_Models
+namespace DataLayer.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,9 @@ namespace ISS.DB_Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class OfficeDCEvents
+    public partial class OLD_OfficeDCEvents
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int id { get; set; }
 
         [StringLength(500)]
@@ -61,7 +62,5 @@ namespace ISS.DB_Models
 
         [StringLength(150)]
         public string EventThumb { get; set; }
-
-        public int? GroupMemberId { get; set; }
     }
 }
