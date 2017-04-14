@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppPattern
 {
-    public abstract class Application
+    public abstract class Application : IDisposable
     {
         public void Run()
         {
@@ -24,5 +24,6 @@ namespace AppPattern
 
         public abstract void PublishResult();
 
+        public abstract void Dispose();
     }
 }
