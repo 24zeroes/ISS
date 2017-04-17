@@ -23,16 +23,15 @@ namespace ISS
             //Initial config
             var ISSKeyPair = PublicKeyBox.GenerateKeyPair();
 
-            KeyPair SecurityResponse = SecCore.RegisterService("ISS", new List<string> { "ISS" }, ISSKeyPair.PublicKey);
+            KeyPair SecurityResponse = SecCore.RegisterService("ISS", new List<JToken> { "ISS" }, ISSKeyPair.PublicKey);
 
-            byte[] ISSNonce = SecurityResponse.PublicKey;
+            //byte[] ISSNonce = SecurityResponse.PublicKey;
 
-            byte[] SecPublicKey = SecurityResponse.PrivateKey;
+            //byte[] SecPublicKey = SecurityResponse.PrivateKey;
 
-            byte[] EncryptedRequest =
-                PublicKeyBox.Create("ISS", ISSNonce, ISSKeyPair.PrivateKey, SecPublicKey);
+            //byte[] EncryptedRequest = PublicKeyBox.Create("ISS", ISSNonce, ISSKeyPair.PrivateKey, SecPublicKey);
 
-            JToken ISSConfig = SecCore.GetProtectedInfo("ISS", EncryptedRequest);
+            JToken ISSConfig = SecCore.GetProtectedInfo("ISS", "ISS");
 
 
             #endregion
@@ -40,7 +39,10 @@ namespace ISS
             #region App1_SCHEDULER
 
             var App1Interval = ISSConfig["App1"]["IntervalInMilliseconds"];
-            var App1Roles = ISSConfig["App1"]["Roles"].ToArray();
+            var App1Roles = ISSConfig["App1"]["Roles"].ToList();
+
+            using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
+
             //Testing to schedule app1
             Task perdiodicTask = PeriodicTaskFactory.Start(() =>
             {
@@ -50,7 +52,7 @@ namespace ISS
                );           // for a total of 10 iterations...
             perdiodicTask.ContinueWith(_ =>
             {
-                using (var testingApp1 = new App1()) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
 
             }).Wait();
 

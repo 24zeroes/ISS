@@ -28,7 +28,7 @@ namespace SecurityProvider
             EncCore = new EncryptionCore(InputFolder, OutputFolder, RemoveOriginalFiles);
         }
 
-        public KeyPair RegisterService(string ServiceName, List<string>Items,  byte[] ServicePublicKey)
+        public KeyPair RegisterService(string ServiceName, List<JToken>Items,  byte[] ServicePublicKey)
         {
             if (ServicePublicKey.Length != 32)
             {
@@ -36,6 +36,7 @@ namespace SecurityProvider
             }
             
             var Nonce = PublicKeyBox.GenerateNonce();
+
             RegisteredServices.Add(new Service
             {
                 Name = ServiceName,
@@ -49,7 +50,7 @@ namespace SecurityProvider
 
 
         protected string Container;
-        protected string Authentification(string ServiceName, byte[] ServiceKey)
+        protected string Authentification(string ServiceName)
         {
             var item = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
             if (item == null)
@@ -58,14 +59,14 @@ namespace SecurityProvider
         }
 
 
-        public JToken GetProtectedInfo(string ServiceName, byte[] ServiceKey)
+        public JToken GetProtectedInfo(string ServiceName, string ServiceKey)
         {
-            string AuthResult = Authentification(ServiceName, ServiceKey);
+            string AuthResult = Authentification(ServiceName);
             if (AuthResult == "")
             {
-                var item = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
-                var Item = PublicKeyBox.Open(ServiceKey, item.Nonce, SecurityCoreKeyPair.PrivateKey, item.PublicKey);
-                return EncCore.GetEncryptedItem(Encoding.UTF8.GetString(Item));
+                //var item = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
+                //var Item = PublicKeyBox.Open(ServiceKey, item.Nonce, SecurityCoreKeyPair.PrivateKey, item.PublicKey);
+                return EncCore.GetEncryptedItem(ServiceKey);
             }
             else
             {
