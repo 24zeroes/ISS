@@ -15,30 +15,36 @@ namespace Test
 {
     public class App1 : Application
     {
+        
+        
+        private JToken App1Config;
+
         public App1(ref SecurityCore SecCore, List<JToken> Roles)
         {
-            var App1KeyPair = PublicKeyBox.GenerateKeyPair();
-
-            KeyPair SecurityResponse = SecCore.RegisterService("App1", Roles, App1KeyPair.PublicKey);
-
+            this.SecCore = SecCore;
+            this.AppKeyPair = PublicKeyBox.GenerateKeyPair();
+            KeyPair SecurityResponse = SecCore.RegisterService("App1", Roles, AppKeyPair.PublicKey);
             //byte[] App1Nonce = SecurityResponse.PublicKey;
 
             //byte[] SecPublicKey = SecurityResponse.PrivateKey;
 
             //byte[] EncryptedRequest = PublicKeyBox.Create("TelBook", App1Nonce, App1KeyPair.PrivateKey, SecPublicKey);
 
-            JToken App1Config = SecCore.GetProtectedInfo("App1", "TelBook");
+            
         }
 
 
         public override void GetConfiguration()
         {
-           
+            this.App1Config = SecCore.GetProtectedInfo("App1", "DCParser");
         }
 
         public override void InitialiseInputData()
         {
-            var dp = new CubeMonitoring();
+            using (var db = new CubeMonitoring())
+            {
+                var item = db.OfficeDCUsers.FirstOrDefault(u => u.UserFIO.Contains("Батейкин"));
+            }
         }
 
         public override void ProcessData()
