@@ -18,6 +18,7 @@ namespace Test
         
         
         private JToken App1Config;
+        private JToken App1Db;
 
         public App1(ref SecurityCore SecCore, List<JToken> Roles)
         {
@@ -37,14 +38,12 @@ namespace Test
         public override void GetConfiguration()
         {
             this.App1Config = SecCore.GetProtectedInfo("App1", "DCParser");
+            this.App1Db = SecCore.GetProtectedInfo("App1", "DB_Universal");
         }
 
         public override void InitialiseInputData()
         {
-            using (var db = new CubeMonitoring())
-            {
-                var item = db.OfficeDCUsers.FirstOrDefault(u => u.UserFIO.Contains("Батейкин"));
-            }
+
         }
 
         public override void ProcessData()

@@ -7,8 +7,8 @@ namespace DataLayer.RTS_CA_Manage
 
     public partial class RTS_CA_Manage : DbContext
     {
-        public RTS_CA_Manage()
-            : base("name=RTS_CA_Manage")
+        public RTS_CA_Manage(string connectionString)
+            : base(connectionString)
         {
         }
 

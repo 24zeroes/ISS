@@ -7,10 +7,14 @@ namespace DataLayer.CubeMonitoring
 
     public partial class CubeMonitoring : DbContext
     {
-        public CubeMonitoring()
-            : base("name=CubeMonitoring")
+        
+
+        public CubeMonitoring(string connectionString)
+            : base(connectionString)
         {
         }
+
+
 
         public virtual DbSet<ADUsers> ADUsers { get; set; }
         public virtual DbSet<OfficeDCComputers> OfficeDCComputers { get; set; }
