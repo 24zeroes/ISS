@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppPattern", "Application\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{49D21069-5D92-4BEF-A936-E71E2D9E7B95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingProvider", "LoggingProvider\LoggingProvider.csproj", "{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{49D21069-5D92-4BEF-A936-E71E2D9E7B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49D21069-5D92-4BEF-A936-E71E2D9E7B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49D21069-5D92-4BEF-A936-E71E2D9E7B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
