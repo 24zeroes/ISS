@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LoggingProvider;
 using SecurityProvider;
 using Sodium;
 
@@ -38,6 +39,8 @@ namespace AppPattern
         protected KeyPair AppKeyPair;
 
         protected SecurityCore SecCore;
+
+        protected LoggingCore log;
 
         #endregion
     }

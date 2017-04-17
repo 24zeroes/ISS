@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using LoggingProvider;
 using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
@@ -35,24 +36,30 @@ namespace ISS
 
 
             #endregion
-            
+
+            #region Logger
+
+            var log = new  LoggingCore(ref SecCore);
+
+            #endregion
+
             #region App1_SCHEDULER
 
             var App1Interval = ISSConfig["App1"]["IntervalInMilliseconds"];
             var App1Roles = ISSConfig["App1"]["Roles"].ToList();
 
-            using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
+            using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
 
             //Testing to schedule app1
             Task perdiodicTask = PeriodicTaskFactory.Start(() =>
             {
-                using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
 
             }, intervalInMilliseconds: App1Interval.Value<int>() // fire every two seconds...
                );           // for a total of 10 iterations...
             perdiodicTask.ContinueWith(_ =>
             {
-                using (var testingApp1 = new App1(ref SecCore, App1Roles)) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
 
             }).Wait();
 

@@ -71,6 +71,10 @@
       <Project>{49d21069-5d92-4bef-a936-e71e2d9e7b95}</Project>
       <Name>DataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LoggingProvider\LoggingProvider.csproj">
+      <Project>{2de8ba38-0d84-43b9-9d7f-dfabe2cbe531}</Project>
+      <Name>LoggingProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SecurityProvider\SecurityProvider.csproj">
       <Project>{a3a5e17a-8ca0-4613-81ce-8ecf81d4bc89}</Project>
       <Name>SecurityProvider</Name>

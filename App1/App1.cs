@@ -10,6 +10,7 @@ using SecurityProvider;
 using Sodium;
 using DataLayer;
 using DataLayer.CubeMonitoring;
+using LoggingProvider;
 
 namespace Test
 {
@@ -20,8 +21,9 @@ namespace Test
         private JToken App1Config;
         private JToken App1Db;
 
-        public App1(ref SecurityCore SecCore, List<JToken> Roles)
+        public App1(ref SecurityCore SecCore, ref LoggingCore log, List<JToken> Roles)
         {
+            this.log = log;
             this.SecCore = SecCore;
             this.AppKeyPair = PublicKeyBox.GenerateKeyPair();
             KeyPair SecurityResponse = SecCore.RegisterService("App1", Roles, AppKeyPair.PublicKey);
