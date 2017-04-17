@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AppPattern;
 using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
+using DataLayer;
+using DataLayer.CubeMonitoring;
 
 namespace Test
 {
@@ -35,7 +38,7 @@ namespace Test
 
         public override void InitialiseInputData()
         {
-
+            var dp = new CubeMonitoring();
         }
 
         public override void ProcessData()
