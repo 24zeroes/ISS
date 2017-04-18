@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using LoggingProvider;
 using Newtonsoft.Json;
+using Quartz;
 using SecurityProvider;
 using Sodium;
 
 namespace AppPattern
 {
-    public abstract class Application : IDisposable
+    public abstract class Application : IJob
     {
         #region execution_plan
-        public void Run()
+        public void Execute(IJobExecutionContext context)
         {
             GetConfiguration();
             InitialiseInputData();
