@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using LoggingProvider;
@@ -24,7 +25,7 @@ namespace ISS
             //Initial config
             var ISSKeyPair = PublicKeyBox.GenerateKeyPair();
 
-            KeyPair SecurityResponse = SecCore.RegisterService("ISS", new List<JToken> { "ISS" }, ISSKeyPair.PublicKey);
+            KeyPair SecurityResponse = SecCore.RegisterService("ISS", new List<JToken> {"ISS"}, ISSKeyPair.PublicKey);
 
             //byte[] ISSNonce = SecurityResponse.PublicKey;
 
@@ -39,10 +40,13 @@ namespace ISS
 
             #region Logger
 
-            var log = new  LoggingCore(ref SecCore);
+            var log = new LoggingCore(ref SecCore);
 
             //log.Append("test");
-            log.Append("Security service successfully started", "INFO", "SecurityProvider", SecCore);
+            log.Info("ISS successfully started");
+            log.Append("Security service successfully started", "INFO", "ISS", SecCore);
+            log.Append("Logging service successfully started", "INFO", "ISS", log);
+
             #endregion
 
             #region App1_SCHEDULER
@@ -50,18 +54,53 @@ namespace ISS
             var App1Interval = ISSConfig["App1"]["IntervalInMilliseconds"];
             var App1Roles = ISSConfig["App1"]["Roles"].ToList();
 
-            using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
-
+            using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles))
+            {
+                try
+                {
+                    testingApp1.Run();
+                    log.Append("App1 started", "INFO", "ISS", testingApp1);
+                }
+                catch (Exception ex)
+                {
+                    log.Exception(ex.Message, "ISS", testingApp1);
+                }
+                
+            }
             //Testing to schedule app1
             Task perdiodicTask = PeriodicTaskFactory.Start(() =>
             {
-                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles))
+                {
+                    try
+                    {
+                        testingApp1.Run();
+                        log.Append("App1 started", "INFO", "ISS", testingApp1);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Exception(ex.Message, "ISS", testingApp1);
+                    }
+
+                }
 
             }, intervalInMilliseconds: App1Interval.Value<int>() // fire every two seconds...
                );           // for a total of 10 iterations...
             perdiodicTask.ContinueWith(_ =>
             {
-                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles)) testingApp1.Run();
+                using (var testingApp1 = new App1(ref SecCore, ref log, App1Roles))
+                {
+                    try
+                    {
+                        testingApp1.Run();
+                        log.Append("App1 started", "INFO", "ISS", testingApp1);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Exception(ex.Message, "ISS", testingApp1);
+                    }
+
+                }
 
             }).Wait();
 

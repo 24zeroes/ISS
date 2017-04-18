@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EncryptionProvider;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Sodium;
 
@@ -13,9 +14,13 @@ namespace SecurityProvider
     public class SecurityCore
     {
         private List<Service> RegisteredServices;
+        [JsonIgnore]
         private KeyPair SecurityCoreKeyPair;
+        [JsonIgnore]
         protected byte[] nonce;
+        [JsonIgnore]
         protected byte[] key;
+        [JsonIgnore]
         private EncryptionCore EncCore;
 
         protected Dictionary<string, string> ServiceKeyPair;

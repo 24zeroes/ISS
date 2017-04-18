@@ -13,9 +13,9 @@ namespace LoggingProvider
     {
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic )
                             .Select(p => base.CreateProperty(p, memberSerialization))
-                        .Union(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Union(type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic)
                                    .Select(f => base.CreateProperty(f, memberSerialization)))
                         .ToList();
             props.ForEach(p => { p.Writable = true; p.Readable = true; });

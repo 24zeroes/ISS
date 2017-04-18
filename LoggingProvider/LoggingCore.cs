@@ -17,8 +17,11 @@ namespace LoggingProvider
 {
     public class LoggingCore
     {
+        [JsonIgnore]
         private KeyPair LoggerKeyPair;
+        [JsonIgnore]
         public SecurityCore SecCore;
+        [JsonIgnore]
         private Logger db;
         private JToken LoggerConfig;
 
