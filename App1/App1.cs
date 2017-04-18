@@ -40,7 +40,7 @@ namespace Test
         public override void GetConfiguration()
         {
             this.App1Config = SecCore.GetProtectedInfo("App1", "DCParser");
-            this.App1Db = SecCore.GetProtectedInfo("App1", "DB_Universal");
+            this.App1Db = SecCore.GetProtectedInfo("App1", "DB_Cube");
         }
 
         public override void InitialiseInputData()

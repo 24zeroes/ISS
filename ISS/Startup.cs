@@ -41,6 +41,8 @@ namespace ISS
 
             var log = new  LoggingCore(ref SecCore);
 
+            //log.Append("test");
+            log.Append("Security service successfully started", "INFO", "SecurityProvider", SecCore);
             #endregion
 
             #region App1_SCHEDULER
