@@ -20,7 +20,7 @@ namespace LoggingProvider
         [JsonIgnore]
         private KeyPair LoggerKeyPair;
         [JsonIgnore]
-        public SecurityCore SecCore;
+        readonly SecurityCore SecCore;
         [JsonIgnore]
         private Logger db;
         [JsonIgnore]
