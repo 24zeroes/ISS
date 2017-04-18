@@ -49,6 +49,19 @@ namespace LoggingProvider
             db.SaveChanges();
         }
 
+        public void Info(string message, string application)
+        {
+            var record = new CommonLogs
+            {
+                date = DateTime.Now,
+                message = message,
+                application = application,
+                category = "INFO"
+            };
+            db.Entry(record).State = EntityState.Added;
+            db.SaveChanges();
+        }
+
         public void Info(string message, object context)
         {
             var settings = new JsonSerializerSettings() { ContractResolver = new MyContractResolver() };
