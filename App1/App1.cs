@@ -18,17 +18,24 @@ namespace Test
     public class App1 : Application
     {
 
-        [JsonIgnore]
-        private JToken App1Config;
-        [JsonIgnore]
-        private JToken App1Db;
+        [JsonIgnore] private JToken App1Config;
+        [JsonIgnore] private JToken App1Db;
 
         public App1(ref SecurityCore SecCore, ref LoggingCore log, List<JToken> Roles)
         {
             this.log = log;
             this.SecCore = SecCore;
             this.AppKeyPair = PublicKeyBox.GenerateKeyPair();
-            KeyPair SecurityResponse = SecCore.RegisterService("App1", Roles, AppKeyPair.PublicKey);
+            try
+            {
+                KeyPair SecurityResponse = SecCore.RegisterService("App1", Roles, AppKeyPair.PublicKey);
+                log.Info("Registered sucessfull", this.ToString());
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex.Message, this.ToString(), this);
+            }
+            
             //byte[] App1Nonce = SecurityResponse.PublicKey;
 
             //byte[] SecPublicKey = SecurityResponse.PrivateKey;

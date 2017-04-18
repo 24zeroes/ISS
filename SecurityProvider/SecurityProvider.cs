@@ -39,9 +39,17 @@ namespace SecurityProvider
             {
                 throw new Exception("Cannot register service with such Public Key");
             }
-            
+
+            var service = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
+
+            if (service != null)
+            {
+                return new KeyPair(service.Nonce, SecurityCoreKeyPair.PublicKey);
+            }
+
             var Nonce = PublicKeyBox.GenerateNonce();
 
+            
             RegisteredServices.Add(new Service
             {
                 Name = ServiceName,
