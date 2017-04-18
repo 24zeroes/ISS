@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using ISS.Schedulers;
 using LoggingProvider;
 using Newtonsoft.Json.Linq;
 using SecurityProvider;
@@ -51,14 +52,27 @@ namespace ISS
 
             #region App1_SCHEDULER
 
-            var App1Interval = ISSConfig["App1"]["IntervalInMilliseconds"];
+            var App1Interval = ISSConfig["App1"]["IntervalInSeconds"];
             var App1Roles = ISSConfig["App1"]["Roles"].ToList();
             //Testing to schedule app1
+
+            App1Scheduler.Start(ref SecCore, ref log, App1Roles, App1Interval.Value<int>());
 
 
 
             #endregion
 
+            #region DCParser_SCHEDULER
+
+            var DCParserInterval = ISSConfig["DCParser"]["IntervalInSeconds"];
+            var DCParserRoles = ISSConfig["DCParser"]["Roles"].ToList();
+            //Testing to schedule DCParser
+
+            DCParserScheduler.Start(ref SecCore, ref log, DCParserRoles, DCParserInterval.Value<int>());
+
+
+
+            #endregion
         }
 
 

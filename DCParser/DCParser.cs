@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
 
-namespace DCParser
+namespace Production
 {
     public class DCParser : Application
     {
@@ -19,10 +19,8 @@ namespace DCParser
         [JsonIgnore]
         private JToken DCParserDbConfig;
 
-        public DCParser(ref SecurityCore SecCore, ref LoggingCore log, List<JToken> Roles)
+        public override void GetConfiguration()
         {
-            this.log = log;
-            this.SecCore = SecCore;
             this.AppKeyPair = PublicKeyBox.GenerateKeyPair();
             try
             {
@@ -33,10 +31,6 @@ namespace DCParser
             {
                 log.Exception(ex.Message, this.ToString(), this);
             }
-        }
-        public override void GetConfiguration()
-        {
-
         }
 
         public override void InitialiseInputData()

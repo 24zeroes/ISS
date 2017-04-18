@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LoggingProvider;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Quartz;
 using SecurityProvider;
 using Sodium;
@@ -16,6 +17,12 @@ namespace AppPattern
         #region execution_plan
         public void Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+
+            SecCore = (SecurityCore) dataMap["security"];
+            log = (LoggingCore) dataMap["logging"];
+            Roles = (List<JToken>) dataMap["roles"];
+
             GetConfiguration();
             InitialiseInputData();
             ProcessData();
@@ -43,6 +50,9 @@ namespace AppPattern
         protected SecurityCore SecCore;
         [JsonIgnore]
         protected LoggingCore log;
+
+        [JsonIgnore] protected List<JToken> Roles;
+
 
         #endregion
     }
