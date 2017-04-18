@@ -8,8 +8,9 @@ namespace DataLayer.DB_Models.Logging
     public partial class Logger : DbContext
     {
         public Logger(string connectionString)
-            : base("name=Logger")
+            : base(connectionString)
         {
+            Database.SetInitializer<Logger>(null);
         }
 
         public virtual DbSet<CommonLogs> CommonLogs { get; set; }

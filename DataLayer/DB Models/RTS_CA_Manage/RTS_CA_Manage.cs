@@ -10,6 +10,7 @@ namespace DataLayer.RTS_CA_Manage
         public RTS_CA_Manage(string connectionString)
             : base(connectionString)
         {
+            Database.SetInitializer<RTS_CA_Manage>(null);
         }
 
         public virtual DbSet<alerts> alerts { get; set; }

@@ -12,6 +12,7 @@ namespace DataLayer.CubeMonitoring
         public CubeMonitoring(string connectionString)
             : base(connectionString)
         {
+            Database.SetInitializer<CubeMonitoring>(null);
         }
 
 
