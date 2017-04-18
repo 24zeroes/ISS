@@ -11,14 +11,16 @@ using Sodium;
 using DataLayer;
 using DataLayer.CubeMonitoring;
 using LoggingProvider;
+using Newtonsoft.Json;
 
 namespace Test
 {
     public class App1 : Application
     {
-        
-        
+
+        [JsonIgnore]
         private JToken App1Config;
+        [JsonIgnore]
         private JToken App1Db;
 
         public App1(ref SecurityCore SecCore, ref LoggingCore log, List<JToken> Roles)

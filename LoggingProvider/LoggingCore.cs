@@ -23,6 +23,7 @@ namespace LoggingProvider
         public SecurityCore SecCore;
         [JsonIgnore]
         private Logger db;
+        [JsonIgnore]
         private JToken LoggerConfig;
 
         public LoggingCore(ref SecurityCore SecCore)
