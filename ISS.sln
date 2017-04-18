@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingProvider", "LoggingProvider\LoggingProvider.csproj", "{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCParser", "DCParser\DCParser.csproj", "{12812C45-437F-4B97-9751-CC2BD621663C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DE8BA38-0D84-43B9-9D7F-DFABE2CBE531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12812C45-437F-4B97-9751-CC2BD621663C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12812C45-437F-4B97-9751-CC2BD621663C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12812C45-437F-4B97-9751-CC2BD621663C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12812C45-437F-4B97-9751-CC2BD621663C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
