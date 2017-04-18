@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContractResolver.cs" />
     <Compile Include="LoggingCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

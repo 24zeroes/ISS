@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.DB_Models.Logging;
@@ -10,6 +11,8 @@ using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json.Serialization;
+
 namespace LoggingProvider
 {
     public class LoggingCore
@@ -44,19 +47,21 @@ namespace LoggingProvider
 
         public void Append(string message, string category, string application, object context)
         {
-            var javaScriptSerializer = new
-                                            System.Web.Script.Serialization.JavaScriptSerializer();
-            string jsonString = javaScriptSerializer.Serialize(context);
+            var settings = new JsonSerializerSettings() { ContractResolver = new MyContractResolver() };
+            var json = $"\"{context.ToString()}\" : {JsonConvert.SerializeObject(context, settings)}";
+            json = "{" + json + "}";
+
             var record = new CommonLogs
             {
                 date = DateTime.Now,
                 message = message,
                 category = category,
                 application = application,
-                context = jsonString
+                context = json
             };
             db.Entry(record).State = EntityState.Added;
             db.SaveChanges();
         }
+
     }
 }
