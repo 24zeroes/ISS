@@ -29,7 +29,7 @@ namespace ISS.Schedulers
                 .WithIdentity("trigger2", "group2")     // идентифицируем триггер с именем и группой
                 .StartNow()                            // запуск сразу после начала выполнения
                 .WithSimpleSchedule(x => x            // настраиваем выполнение действия
-                    .WithIntervalInSeconds(interval)          // через 1 минуту
+                    .WithIntervalInMinutes(interval)          // через 1 минуту
                     .RepeatForever())                   // бесконечное повторение
                 .Build();                               // создаем триггер
             log.Info("DCParser configured to schedule", "ISS.Schedulers");
