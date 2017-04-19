@@ -42,38 +42,41 @@ namespace Production
 
         public override void InitialiseInputData()
         {
+            //var Config = JsonConvert.DeserializeObject<DCConfig>(JsonConvert.SerializeObject(DCParserConfig));
 
             foreach (var Domain in DCParserConfig)
             {
-                
                 DirectoryEntry entry;
-                try
-                {
-                    entry = new DirectoryEntry(Domain["DC"].Value<string>(), Domain["Username"].Value<string>(), Domain["Password"].Value<string>());
-                    log.Info("Connected to domain sucessfull", Domain["DC"]);
-                }
-                catch (Exception ex)
-                {
-                    log.Exception("Connection to domain failed. Exception message:" + ex.Message, this.ToString(), this);
-                    throw;
-                }
+        
+                
+                entry = new DirectoryEntry("LDAP://" + Domain.First["DC"].Value<string>(), Domain.First["Username"].Value<string>(), Domain.First["Password"].Value<string>());
+                
 
                 DirectorySearcher ds = new DirectorySearcher(entry);
 
                 ds.Filter = "(&(objectClass=group))";
-                
-                Groups.Add(new FullGroups
+                try
                 {
-                    DomainName = Domain["DC"].Value<string>(),
-                    SearchResult = ds.FindAll(),
-                    GroupList = new List<Group>()
-                });
+                    Groups.Add(new FullGroups
+                    {
+                        DomainName = Domain.Path.Replace("DCParser.",""),
+                        SearchResult = ds.FindAll(),
+                        GroupList = new List<Group>()
+                    });
+                    log.Info("Connected to domain sucessfull", Domain);
+                }
+                catch (Exception ex)
+                {
+                    log.Exception("Connection to domain failed. Exception message:" + ex.Message, this.ToString(), Domain);
+                }
 
             }
         }
 
         public override void ProcessData()
         {
+
+
 
         }
 
