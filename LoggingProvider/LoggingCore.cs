@@ -93,6 +93,28 @@ namespace LoggingProvider
             }
         }
 
+        public void Info(string message, string application, object context)
+        {
+            var settings = new JsonSerializerSettings() { ContractResolver = new MyContractResolver() };
+            var json = $"\"{context.ToString()}\" : {JsonConvert.SerializeObject(context, settings)}";
+            json = "{" + json + "}";
+
+            var record = new CommonLogs
+            {
+                date = DateTime.Now,
+                message = message,
+                category = "INFO",
+                application = application,
+                context = json
+            };
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
+        }
+
         public void Append(string message, string category, string application, object context)
         {
             var settings = new JsonSerializerSettings() { ContractResolver = new MyContractResolver() };
