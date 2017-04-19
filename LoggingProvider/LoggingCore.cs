@@ -22,7 +22,7 @@ namespace LoggingProvider
         [JsonIgnore]
         readonly SecurityCore SecCore;
         [JsonIgnore]
-        private Logger db;
+        private string dbConnectionString;
         [JsonIgnore]
         private JToken LoggerConfig;
 
@@ -34,19 +34,25 @@ namespace LoggingProvider
 
             LoggerConfig = SecCore.GetProtectedInfo("Logger", "DB_Logger");
 
-            db = new Logger(LoggerConfig["ConnectionString"].Value<string>());
+            dbConnectionString = LoggerConfig["ConnectionString"].Value<string>();
         }
 
         public void Info(string message)
         {
+
             var record = new CommonLogs
             {
                 date = DateTime.Now,
                 message = message,
                 category = "INFO"
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
+            
         }
 
         public void Info(string message, string application)
@@ -58,8 +64,12 @@ namespace LoggingProvider
                 application = application,
                 category = "INFO"
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
         }
 
         public void Info(string message, object context)
@@ -75,8 +85,12 @@ namespace LoggingProvider
                 category = "INFO",
                 context = json
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
         }
 
         public void Append(string message, string category, string application, object context)
@@ -93,8 +107,12 @@ namespace LoggingProvider
                 application = application,
                 context = json
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
         }
 
         public void Exception(string message, string application, object context)
@@ -111,8 +129,12 @@ namespace LoggingProvider
                 application = application,
                 context = json
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
         }
 
         public void SemanticError(string message, string application, object context)
@@ -129,8 +151,12 @@ namespace LoggingProvider
                 application = application,
                 context = json
             };
-            db.Entry(record).State = EntityState.Added;
-            db.SaveChanges();
+
+            using (var db = new Logger(dbConnectionString))
+            {
+                db.Entry(record).State = EntityState.Added;
+                db.SaveChanges();
+            }
         }
     }
 }
