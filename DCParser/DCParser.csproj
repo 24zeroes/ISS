@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="DCParser.cs" />
     <Compile Include="Deserialize.cs" />
+    <Compile Include="Groups.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
