@@ -22,7 +22,11 @@ namespace Production
             {
                 using (var db = new CubeMonitoring(cubeConnectionString))
                 {
-                    string ComputerName = computer.Properties["name"][0].ToString();
+                    int indexCN = computer.Path.IndexOf("CN=");
+                    int indexComa = computer.Path.IndexOf(",");
+                    string temp = computer.Path.Substring(indexCN + 3,
+                    indexComa - (indexCN + 3));
+                    string ComputerName = temp;
                     string ComputerIP = GetIPFromName(ComputerName);
 
                     var CurrentComputer = db.OfficeDCComputers.FirstOrDefault(g => g.ComputerName == ComputerName);

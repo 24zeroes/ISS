@@ -50,7 +50,7 @@ namespace Production
                             db.SaveChanges();
                         }
 
-                        if (CurrentUser.TelephoneBookId == null)
+                        if ((CurrentUser.TelephoneBookId == null)&&(false))
                         {
                             int surnameI = CurrentUser.UserFIO.IndexOf(" ");
                             int nameI = (surnameI == -1) ? -1 : CurrentUser.UserFIO.LastIndexOf(" ");
