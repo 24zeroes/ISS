@@ -80,6 +80,7 @@ namespace Production
                         {
                             GroupName = Name,
                             GroupDescription = Description,
+                            DomainId = Domain.DomainId,
                             GroupDateModified = DateTime.Now,
                             GroupPath = Path,
 

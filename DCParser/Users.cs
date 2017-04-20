@@ -86,6 +86,7 @@ namespace Production
                             UserFIO = UserFIO,
                             UserSID = UserSID,
                             UserPath = UserPath,
+                            DomainId = Domain.DomainId,
                             UserDateModified = DateTime.Now
                         };
                         db.Entry(User).State = EntityState.Added;

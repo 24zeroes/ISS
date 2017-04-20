@@ -44,6 +44,7 @@ namespace Production
                         {
                             ComputerName = ComputerName,
                             ComputerIP = ComputerIP,
+                            DomainId = Domain.DomainId,
                             ComputerDateModified = DateTime.Now
                         };
                         db.Entry(Computer).State = EntityState.Added;

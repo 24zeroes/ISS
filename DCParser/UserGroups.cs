@@ -41,6 +41,7 @@ namespace Production
                                         {
                                             UserId = CurrentUser.id,
                                             GroupId = group.Id,
+                                            DomainId = Domain.DomainId,
                                             ModifiedDate = DateTime.Now
                                         };
                                         db.Entry(NewUserGroup).State = EntityState.Added;
