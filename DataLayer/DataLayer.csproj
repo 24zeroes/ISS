@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application Models\DC Parser\FullGroups.cs" />
+    <Compile Include="Application Models\DC Parser\FullDomain.cs" />
     <Compile Include="Application Models\DC Parser\Group.cs" />
     <Compile Include="DB Models\CubeMonitoring\ADUsers.cs" />
     <Compile Include="DB Models\CubeMonitoring\CubeMonitoring.cs" />

@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
 using DataLayer;
-using DataLayer.CubeMonitoring;
+using DataLayer.DB_Models.CubeMonitoring;
 using LoggingProvider;
 using Newtonsoft.Json;
 using Quartz;

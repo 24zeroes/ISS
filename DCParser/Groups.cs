@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.Application_Models.DC_Parser;
-using DataLayer.CubeMonitoring;
+using DataLayer.DB_Models.CubeMonitoring;
 using Newtonsoft.Json.Linq;
 
 namespace Production
@@ -26,9 +26,10 @@ namespace Production
             ds.Filter = "(&(objectClass=group))";
             try
             {
-                Groups.Add(new FullGroups
+                Groups.Add(new FullDomain
                 {
                     DomainName = Domain.Path.Replace("DCParser.", ""),
+                    DirectorySearcher = ds,
                     SearchResult = ds.FindAll(),
                     GroupList = new List<Group>()
                 });
@@ -40,7 +41,7 @@ namespace Production
             }
         }
 
-        private void UpdateDomainGroups(FullGroups Domain)
+        private void UpdateDomainGroups(FullDomain Domain)
         {
             log.Info($"Domain {Domain.DomainName} group update started", ToString());
 
@@ -75,7 +76,7 @@ namespace Production
                     else
                     {
 
-                        var Group = new OfficeDCGroups
+                        CurrentGroup = new OfficeDCGroups
                         {
                             GroupName = Name,
                             GroupDescription = Description,
@@ -83,10 +84,16 @@ namespace Production
                             GroupPath = Path,
 
                         };
-                        db.Entry(Group).State = EntityState.Added;
+                        db.Entry(CurrentGroup).State = EntityState.Added;
                         db.SaveChanges();
 
                     }
+
+                    Domain.GroupList.Add(new Group
+                    {
+                        Id = CurrentGroup.id,
+                        Name = CurrentGroup.GroupName
+                    });
                 }
 
 

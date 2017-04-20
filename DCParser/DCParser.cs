@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 using SecurityProvider;
 using Sodium;
 using DataLayer.Application_Models.DC_Parser;
-using DataLayer.CubeMonitoring;
+using DataLayer.DB_Models.CubeMonitoring;
 
 namespace Production
 {
@@ -21,7 +21,7 @@ namespace Production
         [JsonIgnore] private JToken DCParserConfig;
         [JsonIgnore] private JToken DCParserDbConfig;
         [JsonIgnore] private string cubeConnectionString;
-        private List<FullGroups> Groups;
+        private List<FullDomain> Groups;
 
         public override void GetConfiguration()
         {
@@ -38,7 +38,7 @@ namespace Production
             }
 
             DCParserConfig = SecCore.GetProtectedInfo("DCParser", "DCParser");
-            Groups = new List<FullGroups>();
+            Groups = new List<FullDomain>();
             log.Info("Initialisation sucessfull", this.ToString());
         }
 
@@ -58,11 +58,25 @@ namespace Production
 
             cubeConnectionString = SecCore.GetProtectedInfo("DCParser", "DB_Cube")["ConnectionString"].Value<string>();
 
-            foreach (FullGroups Domain  in Groups)
+            foreach (FullDomain Domain  in Groups)
             {
+                Domains domain;
 
-                UpdateDomainGroups(Domain);
+                using (var db = new CubeMonitoring(cubeConnectionString))
+                {
+                    domain = db.Domains.FirstOrDefault(d => d.DomainName == Domain.DomainName);
+                }
 
+                if (domain != null)
+                {
+                    Domain.DomainId = domain.id;
+                    UpdateDomainGroups(Domain);
+                }
+                else
+                {
+                    log.SemanticError($"Domain {Domain.DomainName} was not found in DB", this.ToString(), domain);    
+                }
+                
             }
 
         }
@@ -75,5 +89,7 @@ namespace Production
         public override void Dispose()
         {
         }
+
+
     }
 }

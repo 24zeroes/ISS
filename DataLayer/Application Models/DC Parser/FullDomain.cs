@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace DataLayer.Application_Models.DC_Parser
 {
-    public class FullGroups
+    public class FullDomain
     {
         public string DomainName { get; set; }
+        public int DomainId { get; set; }
+        public DirectorySearcher DirectorySearcher { get; set; }
         public SearchResultCollection SearchResult { get; set; }
         public List<Group> GroupList { get; set; }
     }
