@@ -21,7 +21,7 @@ namespace ISS
         {
             #region CRYPTO
 
-            var SecCore = new SecurityCore(@"InputFiles/", @"OutputFiles/", false);
+            var SecCore = new SecurityCore(@"InputFiles/", @"OutputFiles/", true);
 
             //Initial config
             var ISSKeyPair = PublicKeyBox.GenerateKeyPair();
@@ -50,17 +50,6 @@ namespace ISS
 
             #endregion
 
-            #region App1_SCHEDULER
-
-            var App1Interval = ISSConfig["App1"]["IntervalInSeconds"];
-            var App1Roles = ISSConfig["App1"]["Roles"].ToList();
-            //Testing to schedule app1
-
-            App1Scheduler.Start(ref SecCore, ref log, App1Roles, App1Interval.Value<int>());
-
-
-
-            #endregion
 
             #region DCParser_SCHEDULER
 
