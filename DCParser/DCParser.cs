@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations.Model;
-using System.DirectoryServices;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AppPattern;
-using LoggingProvider;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SecurityProvider;
-using Sodium;
 using DataLayer.Application_Models.DC_Parser;
 using DataLayer.DB_Models.CubeMonitoring;
 
@@ -26,20 +18,9 @@ namespace Production
 
         public override void GetConfiguration()
         {
-            this.AppKeyPair = PublicKeyBox.GenerateKeyPair();
-            try
-            {
-                KeyPair SecurityResponse = SecCore.RegisterService("DCParser", Roles, AppKeyPair.PublicKey);
-                log.Info("Registered sucessfull", this.ToString());
-            }
-            catch (Exception ex)
-            {
-                log.Exception("Registration error. Exception message:" + ex.Message, this.ToString(), this);
-                throw;
-            }
 
-            DCParserConfig = SecCore.GetProtectedInfo("DCParser", "DCParser");
-            cubeConnectionString = SecCore.GetProtectedInfo("DCParser", "DB_Cube")["ConnectionString"].Value<string>();
+            DCParserConfig = SecCore.GetProtectedInfo("DCParser");
+            cubeConnectionString = SecCore.GetProtectedInfo("DB_Cube")["ConnectionString"].Value<string>();
             Groups = new List<FullDomain>();
             log.Info("Initialisation sucessfull", this.ToString());
         }

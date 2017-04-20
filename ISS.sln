@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISS", "ISS\ISS.csproj", "{792D82D2-E4E6-4BC6-8394-527E9DD902AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionProvider", "EncryptionProvider\EncryptionProvider.csproj", "{CB605597-8D79-4A63-9B89-A9D14DB1A4E9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityProvider", "SecurityProvider\SecurityProvider.csproj", "{A3A5E17A-8CA0-4613-81CE-8ECF81D4BC89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App1", "App1\App1.csproj", "{0ACE84C8-172F-4A25-AAF5-DEA94A746861}"
@@ -29,10 +27,6 @@ Global
 		{792D82D2-E4E6-4BC6-8394-527E9DD902AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{792D82D2-E4E6-4BC6-8394-527E9DD902AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{792D82D2-E4E6-4BC6-8394-527E9DD902AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB605597-8D79-4A63-9B89-A9D14DB1A4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB605597-8D79-4A63-9B89-A9D14DB1A4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB605597-8D79-4A63-9B89-A9D14DB1A4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB605597-8D79-4A63-9B89-A9D14DB1A4E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A3A5E17A-8CA0-4613-81CE-8ECF81D4BC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A3A5E17A-8CA0-4613-81CE-8ECF81D4BC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3A5E17A-8CA0-4613-81CE-8ECF81D4BC89}.Release|Any CPU.ActiveCfg = Release|Any CPU

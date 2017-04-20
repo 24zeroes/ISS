@@ -1,90 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EncryptionProvider;
+using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Sodium;
 
 namespace SecurityProvider
 {
     public class SecurityCore
     {
-        private List<Service> RegisteredServices;
-        [JsonIgnore]
-        private KeyPair SecurityCoreKeyPair;
-        [JsonIgnore]
-        protected byte[] nonce;
-        [JsonIgnore]
-        protected byte[] key;
-        [JsonIgnore]
-        private EncryptionCore EncCore;
+        [JsonIgnore] private string Config;
 
-        protected Dictionary<string, string> ServiceKeyPair;
-        protected List<string> ContainersPath;
+       
 
-        public SecurityCore(string InputFolder, string OutputFolder, bool RemoveOriginalFiles)
+        public SecurityCore(string connString, string Key)
         {
-            SecurityCoreKeyPair = PublicKeyBox.GenerateKeyPair();
-            RegisteredServices = new List<Service>();
-            EncCore = new EncryptionCore(InputFolder, OutputFolder, RemoveOriginalFiles);
+            var connection = new SqlConnection(connString);
+            try
+            {
+                connection.Open();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            var get_config = new SqlCommand($"select ConfigValue from config where ConfigKey = '{Key}'", connection);
+
+            string JsonString;
+
+            try
+            {
+                JsonString = get_config.ExecuteScalar().ToString();
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            Config = JsonString;
+
+
         }
 
-        public KeyPair RegisterService(string ServiceName, List<JToken>Items,  byte[] ServicePublicKey)
+        public JToken GetProtectedInfo(string ServiceKey)
         {
-            if (ServicePublicKey.Length != 32)
+            JObject config = JObject.Parse(Config);
+            foreach (var item in config)
             {
-                throw new Exception("Cannot register service with such Public Key");
+                if (item.Key == ServiceKey)
+                    return item.Value;
             }
-
-            var service = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
-
-            if (service != null)
-            {
-                return new KeyPair(service.Nonce, SecurityCoreKeyPair.PublicKey);
-            }
-
-            var Nonce = PublicKeyBox.GenerateNonce();
-
-            
-            RegisteredServices.Add(new Service
-            {
-                Name = ServiceName,
-                PublicKey = ServicePublicKey,
-                Nonce = Nonce,
-                Items = Items
-
-            });
-            return new KeyPair(Nonce, SecurityCoreKeyPair.PublicKey);
-        }
-
-
-        protected string Container;
-        protected string Authentification(string ServiceName)
-        {
-            var item = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
-            if (item == null)
-                throw new Exception("Cannot verify service. Acess denied.");
-            return "";
-        }
-
-
-        public JToken GetProtectedInfo(string ServiceName, string ServiceKey)
-        {
-            string AuthResult = Authentification(ServiceName);
-            if (AuthResult == "")
-            {
-                //var item = RegisteredServices.FirstOrDefault(s => s.Name == ServiceName);
-                //var Item = PublicKeyBox.Open(ServiceKey, item.Nonce, SecurityCoreKeyPair.PrivateKey, item.PublicKey);
-                return EncCore.GetEncryptedItem(ServiceKey);
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
     }

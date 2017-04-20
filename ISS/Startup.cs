@@ -9,7 +9,6 @@ using ISS.Schedulers;
 using LoggingProvider;
 using Newtonsoft.Json.Linq;
 using SecurityProvider;
-using Sodium;
 using Test;
 
 
@@ -19,23 +18,34 @@ namespace ISS
     {
         static void Main(string[] args)
         {
+
+            Console.Write("Login: ");
+            string Username = "ISSfintender";//Console.ReadLine();
+            Console.Write("Password: ");
+            string Password = "qwerty";//Console.ReadLine();
+            Console.Write("Key: ");
+            string Key = "fintender";//Console.ReadLine();
+            string ConnectionString =
+                $"user id={Username};" +
+                   $"password={Password};server=172.18.27.75;" +
+                   "Trusted_Connection=no;" +
+                   "database=ISS; " +
+                   "connection timeout=30";
+
             #region CRYPTO
 
-            var SecCore = new SecurityCore(@"InputFiles/", @"OutputFiles/", true);
+            SecurityCore SecCore;
+            try
+            {
+                SecCore = new SecurityCore(ConnectionString, Key);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("GTFO");
+                throw;
+            }
 
-            //Initial config
-            var ISSKeyPair = PublicKeyBox.GenerateKeyPair();
-
-            KeyPair SecurityResponse = SecCore.RegisterService("ISS", new List<JToken> {"ISS"}, ISSKeyPair.PublicKey);
-
-            //byte[] ISSNonce = SecurityResponse.PublicKey;
-
-            //byte[] SecPublicKey = SecurityResponse.PrivateKey;
-
-            //byte[] EncryptedRequest = PublicKeyBox.Create("ISS", ISSNonce, ISSKeyPair.PrivateKey, SecPublicKey);
-
-            JToken ISSConfig = SecCore.GetProtectedInfo("ISS", "ISS");
-
+            JToken ISSConfig = SecCore.GetProtectedInfo("ISS");
 
             #endregion
 

@@ -1,24 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using DataLayer.DB_Models.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SecurityProvider;
-using Sodium;
-using System.Web.Script.Serialization;
-using Newtonsoft.Json.Serialization;
+
 
 namespace LoggingProvider
 {
     public class LoggingCore
     {
-        [JsonIgnore]
-        private KeyPair LoggerKeyPair;
         [JsonIgnore]
         readonly SecurityCore SecCore;
         [JsonIgnore]
@@ -29,10 +20,8 @@ namespace LoggingProvider
         public LoggingCore(ref SecurityCore SecCore)
         {
             this.SecCore = SecCore;
-            this.LoggerKeyPair = PublicKeyBox.GenerateKeyPair();
-            KeyPair SecurityResponse = SecCore.RegisterService("Logger", new List<JToken> { "Logger" }, LoggerKeyPair.PublicKey);
 
-            LoggerConfig = SecCore.GetProtectedInfo("Logger", "DB_Logger");
+            LoggerConfig = SecCore.GetProtectedInfo("DB_Logger");
 
             dbConnectionString = LoggerConfig["ConnectionString"].Value<string>();
         }

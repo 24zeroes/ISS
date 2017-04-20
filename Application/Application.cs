@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using LoggingProvider;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quartz;
 using SecurityProvider;
-using Sodium;
+
 
 namespace AppPattern
 {
@@ -21,7 +17,6 @@ namespace AppPattern
 
             SecCore = (SecurityCore) dataMap["security"];
             log = (LoggingCore) dataMap["logging"];
-            Roles = (List<JToken>) dataMap["roles"];
 
             GetConfiguration();
             InitialiseInputData();
@@ -45,13 +40,9 @@ namespace AppPattern
 
         #region properties
         [JsonIgnore]
-        protected KeyPair AppKeyPair;
-        [JsonIgnore]
         protected SecurityCore SecCore;
         [JsonIgnore]
         protected LoggingCore log;
-
-        [JsonIgnore] protected List<JToken> Roles;
 
 
         #endregion
