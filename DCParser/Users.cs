@@ -15,6 +15,7 @@ namespace Production
     {
         private void UpdateUsers(FullDomain Domain)
         {
+            log.Info($"Domain {Domain.DomainName} user update started", ToString());
             Domain.DirectorySearcher.Filter = "(&(objectClass=user))";
             Domain.SearchResult = Domain.DirectorySearcher.FindAll();
             foreach (SearchResult user in Domain.SearchResult)
@@ -93,6 +94,7 @@ namespace Production
                     }
                 }
             }
+            log.Info($"Domain {Domain.DomainName} user update complited", ToString());
         }
     }
 }

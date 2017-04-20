@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations.Model;
 using System.DirectoryServices;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,7 @@ namespace Production
             }
 
             DCParserConfig = SecCore.GetProtectedInfo("DCParser", "DCParser");
+            cubeConnectionString = SecCore.GetProtectedInfo("DCParser", "DB_Cube")["ConnectionString"].Value<string>();
             Groups = new List<FullDomain>();
             log.Info("Initialisation sucessfull", this.ToString());
         }
@@ -56,7 +58,7 @@ namespace Production
         public override void ProcessData()
         {
 
-            cubeConnectionString = SecCore.GetProtectedInfo("DCParser", "DB_Cube")["ConnectionString"].Value<string>();
+            
 
             foreach (FullDomain Domain  in Groups)
             {
@@ -70,8 +72,12 @@ namespace Production
                 if (domain != null)
                 {
                     Domain.DomainId = domain.id;
+
                     UpdateDomainGroups(Domain);
                     UpdateUsers(Domain);
+                    UpdateUserGroups(Domain);
+                    UpdateComputers(Domain);
+
                 }
                 else
                 {
