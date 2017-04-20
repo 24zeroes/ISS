@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Data.Entity;
@@ -19,6 +19,7 @@ namespace DataLayer.CubeMonitoring
 
         public virtual DbSet<ADUsers> ADUsers { get; set; }
         public virtual DbSet<OfficeDCComputers> OfficeDCComputers { get; set; }
+        public virtual DbSet<Domains> Domains { get; set; }
         public virtual DbSet<OfficeDCEvents> OfficeDCEvents { get; set; }
         public virtual DbSet<OfficeDCGroups> OfficeDCGroups { get; set; }
         public virtual DbSet<OfficeDCUserGroups> OfficeDCUserGroups { get; set; }
@@ -222,6 +223,10 @@ namespace DataLayer.CubeMonitoring
 
             modelBuilder.Entity<OLD_OfficeDCEvents>()
                 .Property(e => e.EventThumb)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Domains>()
+                .Property(e => e.DomainName)
                 .IsUnicode(false);
         }
     }

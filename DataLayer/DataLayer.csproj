@@ -57,6 +57,7 @@
     <Compile Include="Application Models\DC Parser\Group.cs" />
     <Compile Include="DB Models\CubeMonitoring\ADUsers.cs" />
     <Compile Include="DB Models\CubeMonitoring\CubeMonitoring.cs" />
+    <Compile Include="DB Models\CubeMonitoring\Domains.cs" />
     <Compile Include="DB Models\CubeMonitoring\OfficeDCComputers.cs" />
     <Compile Include="DB Models\CubeMonitoring\OfficeDCEvents.cs" />
     <Compile Include="DB Models\CubeMonitoring\OfficeDCGroups.cs" />

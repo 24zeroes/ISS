@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;

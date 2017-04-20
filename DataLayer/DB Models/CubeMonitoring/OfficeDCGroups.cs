@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -20,5 +20,7 @@ namespace DataLayer.CubeMonitoring
 
         [StringLength(300)]
         public string GroupPath { get; set; }
+
+        public int DomainId { get; set; }
     }
 }

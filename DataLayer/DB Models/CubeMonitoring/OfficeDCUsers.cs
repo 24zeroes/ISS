@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -22,5 +22,6 @@ namespace DataLayer.CubeMonitoring
         public string UserPath { get; set; }
 
         public int? TelephoneBookId { get; set; }
+        public int DomainId { get; set; }
     }
 }

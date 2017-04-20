@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +12,8 @@ namespace DataLayer.CubeMonitoring
 
         [StringLength(500)]
         public string EventName { get; set; }
+
+        public int DomainId { get; set; }
 
         [StringLength(150)]
         public string LogName { get; set; }

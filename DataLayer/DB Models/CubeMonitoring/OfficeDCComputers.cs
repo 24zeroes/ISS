@@ -1,4 +1,4 @@
-namespace DataLayer.CubeMonitoring
+namespace DataLayer.DB_Models.CubeMonitoring
 {
     using System;
     using System.Collections.Generic;
@@ -17,5 +17,7 @@ namespace DataLayer.CubeMonitoring
         public string ComputerIP { get; set; }
 
         public DateTime? ComputerDateModified { get; set; }
+
+        public int DomainId { get; set; }
     }
 }
