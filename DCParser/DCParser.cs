@@ -71,11 +71,14 @@ namespace Production
                 {
                     Domain.DomainId = domain.id;
                     UpdateDomainGroups(Domain);
+                    UpdateUsers(Domain);
                 }
                 else
                 {
                     log.SemanticError($"Domain {Domain.DomainName} was not found in DB", this.ToString(), domain);    
                 }
+
+
                 
             }
 
