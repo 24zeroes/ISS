@@ -20,11 +20,12 @@ namespace ISS
         {
 
             Console.Write("Login: ");
-            string Username = "ISSfintender";//Console.ReadLine();
+            string Username = Console.ReadLine();
             Console.Write("Password: ");
-            string Password = "qwerty";//Console.ReadLine();
+            string Password = Console.ReadLine();
             Console.Write("Key: ");
-            string Key = "fintender";//Console.ReadLine();
+            string Key = Console.ReadLine();
+
             string ConnectionString =
                 $"user id={Username};" +
                    $"password={Password};server=172.18.27.75;" +

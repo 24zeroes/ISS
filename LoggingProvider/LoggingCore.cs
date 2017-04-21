@@ -33,7 +33,8 @@ namespace LoggingProvider
             {
                 date = DateTime.Now,
                 message = message,
-                category = "INFO"
+                category = "INFO",
+                instance = SecCore.Instance
             };
 
             using (var db = new Logger(dbConnectionString))
@@ -51,6 +52,7 @@ namespace LoggingProvider
                 date = DateTime.Now,
                 message = message,
                 application = application,
+                instance = SecCore.Instance,
                 category = "INFO"
             };
 
@@ -72,6 +74,7 @@ namespace LoggingProvider
                 date = DateTime.Now,
                 message = message,
                 category = "INFO",
+                instance = SecCore.Instance,
                 context = json
             };
 
@@ -94,6 +97,7 @@ namespace LoggingProvider
                 message = message,
                 category = "INFO",
                 application = application,
+                instance = SecCore.Instance,
                 context = json
             };
 
@@ -116,6 +120,7 @@ namespace LoggingProvider
                 message = message,
                 category = category,
                 application = application,
+                instance = SecCore.Instance,
                 context = json
             };
 
@@ -138,6 +143,7 @@ namespace LoggingProvider
                 message = message,
                 category = "EXCEPTION",
                 application = application,
+                instance = SecCore.Instance,
                 context = json
             };
 
@@ -160,6 +166,7 @@ namespace LoggingProvider
                 message = message,
                 category = "SEMANTIC ERROR",
                 application = application,
+                instance = SecCore.Instance,
                 context = json
             };
 

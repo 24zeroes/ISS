@@ -19,5 +19,7 @@ namespace DataLayer.DB_Models.Logging
         public string context { get; set; }
 
         public string category { get; set; }
+
+        public string instance { get; set; }
     }
 }

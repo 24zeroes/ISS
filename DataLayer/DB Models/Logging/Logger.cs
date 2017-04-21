@@ -32,6 +32,10 @@ namespace DataLayer.DB_Models.Logging
             modelBuilder.Entity<CommonLogs>()
                 .Property(e => e.category)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<CommonLogs>()
+                .Property(e => e.instance)
+                .IsUnicode(false);
         }
     }
 }

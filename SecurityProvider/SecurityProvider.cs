@@ -8,11 +8,13 @@ namespace SecurityProvider
     public class SecurityCore
     {
         [JsonIgnore] private string Config;
+        public string Instance;
 
        
 
         public SecurityCore(string connString, string Key)
         {
+            Instance = Key;
             var connection = new SqlConnection(connString);
             try
             {
