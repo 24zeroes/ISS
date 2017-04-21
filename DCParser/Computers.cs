@@ -27,7 +27,7 @@ namespace Production
                     string temp = computer.Path.Substring(indexCN + 3,
                     indexComa - (indexCN + 3));
                     string ComputerName = temp;
-                    string ComputerIP = GetIPFromName(ComputerName);
+                    string ComputerIP = GetIPFromName($"{ComputerName}.{Domain.DomainName}.local");
 
                     var CurrentComputer = db.OfficeDCComputers.FirstOrDefault(g => g.ComputerName == ComputerName);
 

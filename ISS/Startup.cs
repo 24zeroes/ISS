@@ -25,6 +25,7 @@ namespace ISS
             string Password = Console.ReadLine();
             Console.Write("Key: ");
             string Key = Console.ReadLine();
+            Console.Clear();
 
             string ConnectionString =
                 $"user id={Username};" +
