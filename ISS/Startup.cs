@@ -75,13 +75,17 @@ namespace ISS
             #region DCParser_SCHEDULER
 
             var DCParserInterval = ISSConfig["DCParser"]["IntervalInMinutes"];
-            var DCParserRoles = ISSConfig["DCParser"]["Roles"].ToList();
             //Testing to schedule DCParser
 
-            DCParserScheduler.Start(ref SecCore, ref log, DCParserRoles, DCParserInterval.Value<int>());
+            DCParserScheduler.Start(ref SecCore, ref log, DCParserInterval.Value<int>());
 
 
 
+            #endregion
+
+            #region EventLogParser
+                var EventLogParserInterval = ISSConfig["EventLogParser"]["IntervalInMinutes"];
+                EventLogScheduler.Start(ref SecCore, ref log, EventLogParserInterval.Value<int>());
             #endregion
         }
 

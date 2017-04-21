@@ -4,19 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{792D82D2-E4E6-4BC6-8394-527E9DD902AD}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0D03E9DF-5D79-4DDF-B227-725517A2AA20}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ISS</RootNamespace>
-    <AssemblyName>ISS</AssemblyName>
+    <RootNamespace>EventLogParser</RootNamespace>
+    <AssemblyName>EventLogParser</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -62,8 +57,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,27 +65,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Display.cs" />
-    <Compile Include="Schedulers\App1Scheduler.cs" />
-    <Compile Include="Schedulers\DCParserScheduler.cs" />
-    <Compile Include="Schedulers\DisplayScheduler.cs" />
-    <Compile Include="Schedulers\EventLogScheduler.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="EventLogParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="job_scheduling_data_2_0.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\App1\App1.csproj">
-      <Project>{0ace84c8-172f-4a25-aaf5-dea94a746861}</Project>
-      <Name>App1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Application\AppPattern.csproj">
       <Project>{f620274b-6409-45cf-9d2c-da4c0072b44e}</Project>
       <Name>AppPattern</Name>
@@ -100,14 +76,6 @@
     <ProjectReference Include="..\DataLayer\DataLayer.csproj">
       <Project>{49d21069-5d92-4bef-a936-e71e2d9e7b95}</Project>
       <Name>DataLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DCParser\DCParser.csproj">
-      <Project>{12812c45-437f-4b97-9751-cc2bd621663c}</Project>
-      <Name>DCParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EventLogParser\EventLogParser.csproj">
-      <Project>{0d03e9df-5d79-4ddf-b227-725517a2aa20}</Project>
-      <Name>EventLogParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\LoggingProvider\LoggingProvider.csproj">
       <Project>{2de8ba38-0d84-43b9-9d7f-dfabe2cbe531}</Project>
@@ -118,14 +86,14 @@
       <Name>SecurityProvider</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.2.3.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.3.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.3.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Baseclass.Contrib.Nuget.Output.2.3.0\build\net40\Baseclass.Contrib.Nuget.Output.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
