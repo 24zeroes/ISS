@@ -18,6 +18,7 @@ namespace Production
 
         public override void GetConfiguration()
         {
+            SecCore.TaskStarted(id);
 
             DCParserConfig = SecCore.GetProtectedInfo("DCParser");
             cubeConnectionString = SecCore.GetProtectedInfo("DB_Cube")["ConnectionString"].Value<string>();
@@ -73,7 +74,7 @@ namespace Production
 
         public override void PublishResult()
         {
-
+            SecCore.TaskEnded(id, "Waiting");
         }
 
         public override void Dispose()

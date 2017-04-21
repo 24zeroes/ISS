@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Application Models\DC Parser\FullDomain.cs" />
     <Compile Include="Application Models\DC Parser\Group.cs" />
+    <Compile Include="Application Models\ISS\Task.cs" />
     <Compile Include="DB Models\CubeMonitoring\ADUsers.cs" />
     <Compile Include="DB Models\CubeMonitoring\CubeMonitoring.cs" />
     <Compile Include="DB Models\CubeMonitoring\Domains.cs" />

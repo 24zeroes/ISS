@@ -72,8 +72,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Display.cs" />
     <Compile Include="Schedulers\App1Scheduler.cs" />
     <Compile Include="Schedulers\DCParserScheduler.cs" />
+    <Compile Include="Schedulers\DisplayScheduler.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -93,6 +95,10 @@
     <ProjectReference Include="..\Application\AppPattern.csproj">
       <Project>{f620274b-6409-45cf-9d2c-da4c0072b44e}</Project>
       <Name>AppPattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
+      <Project>{49d21069-5d92-4bef-a936-e71e2d9e7b95}</Project>
+      <Name>DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\DCParser\DCParser.csproj">
       <Project>{12812c45-437f-4b97-9751-cc2bd621663c}</Project>

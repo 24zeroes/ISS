@@ -17,7 +17,7 @@ namespace AppPattern
 
             SecCore = (SecurityCore) dataMap["security"];
             log = (LoggingCore) dataMap["logging"];
-
+            id = (int) dataMap["id"];
             GetConfiguration();
             InitialiseInputData();
             ProcessData();
@@ -44,6 +44,7 @@ namespace AppPattern
         [JsonIgnore]
         protected LoggingCore log;
 
+        protected int id;
 
         #endregion
     }

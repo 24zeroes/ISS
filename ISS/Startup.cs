@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,7 @@ namespace ISS
     {
         static void Main(string[] args)
         {
+           
 
             Console.Write("Login: ");
             string Username = Console.ReadLine();
@@ -27,7 +29,13 @@ namespace ISS
             string Key = Console.ReadLine();
             Console.Clear();
 
-            string ConnectionString =
+            
+            
+            
+
+
+            
+            string ConnectionString =   
                 $"user id={Username};" +
                    $"password={Password};server=172.18.27.75;" +
                    "Trusted_Connection=no;" +
@@ -50,7 +58,7 @@ namespace ISS
             JToken ISSConfig = SecCore.GetProtectedInfo("ISS");
 
             #endregion
-
+            DisplayScheduler.Start(ref SecCore, 1);
             #region Logger
 
             var log = new LoggingCore(ref SecCore);
@@ -62,6 +70,7 @@ namespace ISS
 
             #endregion
 
+            
 
             #region DCParser_SCHEDULER
 

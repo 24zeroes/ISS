@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using DataLayer.Application_Models.ISS;
 namespace SecurityProvider
 {
     public class SecurityCore
@@ -10,10 +11,11 @@ namespace SecurityProvider
         [JsonIgnore] private string Config;
         public string Instance;
 
-       
+        public List<Task> Tasks;
 
         public SecurityCore(string connString, string Key)
         {
+            Tasks = new List<Task>();
             Instance = Key;
             var connection = new SqlConnection(connString);
             try
@@ -53,6 +55,30 @@ namespace SecurityProvider
                     return item.Value;
             }
             return null;
+        }
+
+        public int RegisterTask(string TaskName, string TaskRule)
+        {
+            Tasks.Add(new Task
+            {
+                Name = TaskName,
+                Rule = TaskRule,
+                ExecCount = 0,
+                Status = "Registered"
+            });
+            return (Tasks.Count - 1);
+        }
+
+        public void TaskStarted(int id)
+        {
+            Tasks[id].Status = "Executing";
+            
+        }
+
+        public void TaskEnded(int id, string Code)
+        {
+            Tasks[id].Status = Code;
+            Tasks[id].ExecCount++;
         }
 
     }

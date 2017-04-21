@@ -9,34 +9,26 @@ using Production;
 using Quartz;
 using Quartz.Impl;
 using SecurityProvider;
-using Test;
-using Production;
 
 namespace ISS.Schedulers
 {
-    class DCParserScheduler
+    class DisplayScheduler
     {
-        public static void Start(ref SecurityCore SecCore, ref LoggingCore log, List<JToken> Roles, int interval)
+        public static void Start(ref SecurityCore SecCore, int interval)
         {
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Start();
 
-            IJobDetail job = JobBuilder.Create<DCParser>().Build();
+            IJobDetail job = JobBuilder.Create<Display>().Build();
             job.JobDataMap["security"] = SecCore;
-            job.JobDataMap["logging"] = log;
-            job.JobDataMap["roles"] = Roles;
-            job.JobDataMap["id"] = SecCore.RegisterTask("DCParser", $"Every {interval} minutes");
-
-
 
             ITrigger trigger = TriggerBuilder.Create()  // создаем триггер
-                .WithIdentity("trigger2", "group2")     // идентифицируем триггер с именем и группой
+                .WithIdentity("trigger0", "group0")     // идентифицируем триггер с именем и группой
                 .StartNow()                            // запуск сразу после начала выполнения
                 .WithSimpleSchedule(x => x            // настраиваем выполнение действия
-                    .WithIntervalInMinutes(interval)          // через 1 минуту
+                    .WithIntervalInSeconds(interval)          // через 1 минуту
                     .RepeatForever())                   // бесконечное повторение
                 .Build();                               // создаем триггер
-            log.Info("DCParser configured to schedule", "ISS.Schedulers");
             scheduler.ScheduleJob(job, trigger);        // начинаем выполнение работы
         }
     }
