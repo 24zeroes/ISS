@@ -56,7 +56,7 @@ namespace DataLayer.DB_Models.CubeMonitoring
         [StringLength(150)]
         public string Computer { get; set; }
 
-        public int? EventId { get; set; }
+        public int EventId { get; set; }
 
         [StringLength(150)]
         public string DnsHostName { get; set; }
