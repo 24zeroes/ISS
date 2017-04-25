@@ -32,6 +32,7 @@ namespace Production
 
         private List<Dictionary<string, string>> dicts;
         private string DomainName;
+        private int DomainId;
 
         public override void GetConfiguration()
         {
@@ -40,16 +41,20 @@ namespace Production
             EventLogParserConfig = SecCore.GetProtectedInfo("EventLogParser")["Config"];
             EventLogParserEmail = SecCore.GetProtectedInfo("EventLogParser")["Email"];
             DomainConfig = SecCore.GetProtectedInfo("DCParser");
+            log.Info("Initialisation sucessfull", this.ToString());
         }
 
         public override void InitialiseInputData()
         {
+
             GetEventRecords();
+            log.Info("Forwarded events added to dict", this.ToString(), dicts.Count);
 
         }
 
         public override void ProcessData()
         {
+            log.Info("Dicts parsing started", this.ToString());
             foreach (var task in dicts)
             {
                 var Event = GetEventFromDict(task);
@@ -95,6 +100,9 @@ namespace Production
                                 entry = new DirectoryEntry("LDAP://" + domain.First["DC"].Value<string>(),
                                     domain.First["Username"].Value<string>(), domain.First["Password"].Value<string>());
                                 DomainName = domain.ToString();
+                                var temp =
+                                    db.Domains.FirstOrDefault(d => d.DomainName.ToLower().Contains(DomainName.ToLower()));
+                                Event.DomainId = temp.id;
                             }
                         }
                         DirectorySearcher ds = new DirectorySearcher(entry);
@@ -178,11 +186,15 @@ namespace Production
                             SendMail(DomainName, Event);
                         }
 
+                        log.Info("Event added to db", this.ToString(), Event);
+
                         db.Entry(Event).State = EntityState.Added;
                         db.SaveChanges();
                     }
                 }
             }
+
+            log.Info("Dicts parsing complited", this.ToString());
         }
 
         public override void PublishResult()

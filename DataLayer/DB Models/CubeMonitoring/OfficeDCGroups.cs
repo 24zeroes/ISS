@@ -21,6 +21,6 @@ namespace DataLayer.DB_Models.CubeMonitoring
         [StringLength(300)]
         public string GroupPath { get; set; }
 
-        public int DomainId { get; set; }
+        public int? DomainId { get; set; }
     }
 }

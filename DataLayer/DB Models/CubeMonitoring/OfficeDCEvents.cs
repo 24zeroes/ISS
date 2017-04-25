@@ -13,7 +13,7 @@ namespace DataLayer.DB_Models.CubeMonitoring
         [StringLength(500)]
         public string EventName { get; set; }
 
-        public int DomainId { get; set; }
+        public int? DomainId { get; set; }
 
         [StringLength(150)]
         public string LogName { get; set; }

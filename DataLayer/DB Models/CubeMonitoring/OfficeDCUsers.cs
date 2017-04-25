@@ -22,6 +22,6 @@ namespace DataLayer.DB_Models.CubeMonitoring
         public string UserPath { get; set; }
 
         public int? TelephoneBookId { get; set; }
-        public int DomainId { get; set; }
+        public int? DomainId { get; set; }
     }
 }

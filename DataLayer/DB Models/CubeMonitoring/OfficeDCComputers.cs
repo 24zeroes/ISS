@@ -18,6 +18,6 @@ namespace DataLayer.DB_Models.CubeMonitoring
 
         public DateTime? ComputerDateModified { get; set; }
 
-        public int DomainId { get; set; }
+        public int? DomainId { get; set; }
     }
 }
