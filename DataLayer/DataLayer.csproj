@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application Models\Configuration.cs" />
     <Compile Include="Application Models\DC Parser\FullDomain.cs" />
     <Compile Include="Application Models\DC Parser\Group.cs" />
     <Compile Include="Application Models\EventLog\Event.cs" />

@@ -17,51 +17,64 @@ namespace Production
             dicts = new List<Dictionary<string, string>>();
 
             using (
-                var reader = new EventLogReader(@"%SystemRoot%\System32\Winevt\Logs\ForwardedEvents.evtx",
+                //var reader = new EventLogReader(@"%SystemRoot%\System32\Winevt\Logs\ForwardedEvents.evtx",
+                var reader = new EventLogReader(@"%SystemRoot%\System32\Winevt\Logs\fintender ForwardedEvents.evtx",
                     PathType.FilePath))
             {
 
                 EventRecord record;
                 while ((record = reader.ReadEvent()) != null)
                 {
-                    Dictionary<string, string> task = new Dictionary<string, string>();
-                    task.Add("Log name", record.LogName);
-                    task.Add("Date", record.TimeCreated.ToString());
-                    task.Add("Computer", record.MachineName);
-                    task.Add("EventId", record.Id.ToString());
-                    var xml = record.ToXml();
-                    XmlDocument xDoc = new XmlDocument();
-                    xDoc.LoadXml(record.ToXml());
-                    XmlElement xRoot = xDoc.DocumentElement;
-
-                    foreach (XmlNode xnode in xRoot)
+                    string RecordTarget = GetRecordTarget(record.Id.ToString());
+                    if (RecordTarget != null)
                     {
-                        // получаем атрибут name
-                        if ((xnode.Name == "EventData"))
+                        Dictionary<string, string> task = new Dictionary<string, string>();
+                        task.Add("Log name", record.LogName);
+                        task.Add("Date", record.TimeCreated.ToString());
+                        task.Add("Computer", record.MachineName);
+                        task.Add("EventId", record.Id.ToString());
+                        var xml = record.ToXml();
+                        XmlDocument xDoc = new XmlDocument();
+                        xDoc.LoadXml(record.ToXml());
+                        XmlElement xRoot = xDoc.DocumentElement;
+
+                        foreach (XmlNode xnode in xRoot)
                         {
-                            foreach (XmlNode childnode in xnode.ChildNodes)
+                            // получаем атрибут name
+                            if ((xnode.Name == "EventData"))
                             {
-                                if (childnode.Attributes.Count != 0)
-                                    task.Add(childnode.Attributes[0].InnerText, childnode.InnerText);
+                                foreach (XmlNode childnode in xnode.ChildNodes)
+                                {
+                                    if (childnode.Attributes.Count != 0)
+                                        task.Add(childnode.Attributes[0].InnerText, childnode.InnerText);
+                                }
                             }
-                        }
-                        if ((xnode.Name == "RenderingInfo"))
-                        {
-                            foreach (XmlNode childnode in xnode.ChildNodes)
+                            if ((xnode.Name == "RenderingInfo"))
                             {
-                                if (childnode.Name == "Task")
-                                    task.Add("Task", childnode.InnerText);
+                                foreach (XmlNode childnode in xnode.ChildNodes)
+                                {
+                                    if (childnode.Name == "Task")
+                                        task.Add("Task", childnode.InnerText);
+                                }
                             }
+
                         }
+
+                        dicts.Add(task);
 
                     }
-
-                    dicts.Add(task);
-                    
-
                 }
             }
         
+        }
+
+        private string GetRecordTarget(string Id)
+        {
+            var temp = EventFindConf("id", Id);
+            if (temp != null)
+                return temp["descr"].ToString();
+
+            return null;
         }
 
         private OfficeDCEvents GetEventFromDict(Dictionary<string, string> task)
@@ -106,10 +119,10 @@ namespace Production
 
             if (task.Keys.Contains("EventId"))
             {
+                Event.EventName = EventFindConf("id", task["EventId"])["descr"].ToString();
                 int EventId = Int32.Parse(task["EventId"]);
                 Event.EventId = EventId;
-                if (InEvenPool(Event.EventId))
-                    Event.EventName = EventLogParserConfig[EventId.ToString()].ToString();
+                
             }
 
             if (task.Keys.Contains("DnsHostName"))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using DataLayer.Application_Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DataLayer.Application_Models.ISS;
@@ -9,6 +10,8 @@ namespace SecurityProvider
     public class SecurityCore
     {
         [JsonIgnore] private string Config;
+        [JsonIgnore]
+        public RootObject Configuration;
         public string Instance;
 
         public List<Task> Tasks;
@@ -27,7 +30,7 @@ namespace SecurityProvider
 
                 throw;
             }
-            var get_config = new SqlCommand($"select ConfigValue from config where ConfigKey = '{Key}'", connection);
+            var get_config = new SqlCommand($"select ConfigValue from config where ConfigKey = 'universal'", connection);
 
             string JsonString;
 
@@ -41,9 +44,8 @@ namespace SecurityProvider
                 throw;
             }
 
-            Config = JsonString;
 
-
+            Configuration = GetConfig(JsonString);
         }
 
         public JToken GetProtectedInfo(string ServiceKey)
@@ -55,6 +57,11 @@ namespace SecurityProvider
                     return item.Value;
             }
             return null;
+        }
+
+        public RootObject GetConfig(string JSONconfig)
+        {
+            return JsonConvert.DeserializeObject<RootObject>(JSONconfig);
         }
 
         public int RegisterTask(string TaskName, string TaskRule)

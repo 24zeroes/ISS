@@ -55,8 +55,6 @@ namespace ISS
                 throw;
             }
 
-            JToken ISSConfig = SecCore.GetProtectedInfo("ISS");
-
             #endregion
             DisplayScheduler.Start(ref SecCore, 1);
             #region Logger
@@ -73,19 +71,16 @@ namespace ISS
             
 
             #region DCParser_SCHEDULER
-
-            var DCParserInterval = ISSConfig["DCParser"]["IntervalInMinutes"];
             //Testing to schedule DCParser
+        
+            DCParserScheduler.Start(ref SecCore, ref log);
 
-            DCParserScheduler.Start(ref SecCore, ref log, DCParserInterval.Value<int>());
-
-
+            
 
             #endregion
 
             #region EventLogParser
-                var EventLogParserInterval = ISSConfig["EventLogParser"]["IntervalInMinutes"];
-                EventLogScheduler.Start(ref SecCore, ref log, EventLogParserInterval.Value<int>());
+                //EventLogScheduler.Start(ref SecCore, ref log);
             #endregion
         }
 

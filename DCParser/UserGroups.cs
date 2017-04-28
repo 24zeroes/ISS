@@ -11,21 +11,21 @@ namespace Production
 {
     public partial class DCParser
     {
-        private void UpdateUserGroups(FullDomain Domain)
+        private void UpdateUserGroups(FullDomain domain)
         {
-            log.Info($"Domain {Domain.DomainName} UserGroups update started", ToString());
-            using (var db = new CubeMonitoring(cubeConnectionString))
+            log.Info($"Domain {domain.DomainName} UserGroups update started", ToString());
+            using (var db = new CubeMonitoring(DCConfig.ConnectionString))
             {
-                foreach (var group in Domain.GroupList)
+                foreach (var group in domain.GroupList)
                 {
                     if (group.Id != null)
                     {
-                        Domain.DirectorySearcher.Filter = $"(&(cn={group.Name})(objectClass=group))";
-                        Domain.DirectorySearcher.PropertiesToLoad.Add("member");
-                        Domain.SearchResult = Domain.DirectorySearcher.FindAll();
-                        if (Domain.SearchResult.Count != 0)
+                        domain.DirectorySearcher.Filter = $"(&(cn={group.Name})(objectClass=group))";
+                        domain.DirectorySearcher.PropertiesToLoad.Add("member");
+                        domain.SearchResult = domain.DirectorySearcher.FindAll();
+                        if (domain.SearchResult.Count != 0)
                         {
-                            foreach (var UserCn in Domain.SearchResult[0].Properties["member"])
+                            foreach (var UserCn in domain.SearchResult[0].Properties["member"])
                             {
                                 string cn = UserCn.ToString();
                                 cn = cn.Substring(3, cn.IndexOf(",") - 3);
@@ -41,7 +41,7 @@ namespace Production
                                         {
                                             UserId = CurrentUser.id,
                                             GroupId = group.Id,
-                                            DomainId = Domain.DomainId,
+                                            DomainId = domain.DomainId,
                                             ModifiedDate = DateTime.Now
                                         };
                                         db.Entry(NewUserGroup).State = EntityState.Added;
@@ -55,7 +55,7 @@ namespace Production
                 }
                 db.SaveChanges();
             }
-            log.Info($"Domain {Domain.DomainName} UserGroups update complited", ToString());
+            log.Info($"Domain {domain.DomainName} UserGroups update complited", ToString());
         }
     }
 }

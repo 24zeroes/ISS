@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AppPattern;
+using DataLayer.Application_Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DataLayer.Application_Models.DC_Parser;
 using DataLayer.DB_Models.CubeMonitoring;
+using Application = AppPattern.Application;
 
 namespace Production
 {
     public partial class DCParser : Application
     {
-        [JsonIgnore] private JToken DCParserConfig;
-        [JsonIgnore] private JToken DCParserDbConfig;
-        [JsonIgnore] private string cubeConnectionString;
+        private DBCred DCConfig;
         private List<FullDomain> Groups;
 
         public override void GetConfiguration()
         {
             SecCore.TaskStarted(id);
+            DCConfig = SecCore.Configuration.DBCreds.FirstOrDefault(c => c.DB == "Cube");
 
-            DCParserConfig = SecCore.GetProtectedInfo("DCParser");
-            cubeConnectionString = SecCore.GetProtectedInfo("DB_Cube")["ConnectionString"].Value<string>();
             Groups = new List<FullDomain>();
             log.Info("Initialisation sucessfull", this.ToString());
         }
@@ -29,10 +27,10 @@ namespace Production
         public override void InitialiseInputData()
         {
 
-            foreach (var Domain in DCParserConfig)
+            foreach (var Domain in SecCore.Configuration.Domains)
             {
-
-                GetDomainGroups(Domain);
+                if (Domain.Name.ToLower().Contains(SecCore.Instance.ToLower()))
+                    GetDomainGroups(Domain);
         
             }
         }
@@ -46,7 +44,7 @@ namespace Production
             {
                 Domains domain;
 
-                using (var db = new CubeMonitoring(cubeConnectionString))
+                using (var db = new CubeMonitoring(DCConfig.ConnectionString))
                 {
                     domain = db.Domains.FirstOrDefault(d => d.DomainName == Domain.DomainName);
                 }

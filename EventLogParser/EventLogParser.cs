@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Diagnostics.Eventing.Reader;
 using System.DirectoryServices;
 using System.Linq;
@@ -34,6 +35,15 @@ namespace Production
         private string DomainName;
         private int DomainId;
 
+        private JToken EventFindConf(string Criteria, string WhatToSearch)
+        {
+            foreach (var item in EventLogParserConfig)
+            {
+                if (item[Criteria].Value<string>() == WhatToSearch)
+                    return item;
+            }
+            return null;
+        }
         public override void GetConfiguration()
         {
             SecCore.TaskStarted(id);

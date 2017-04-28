@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
+using DataLayer.Application_Models;
 using DataLayer.DB_Models.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,17 +15,12 @@ namespace LoggingProvider
         [JsonIgnore]
         readonly SecurityCore SecCore;
         [JsonIgnore]
-        private string dbConnectionString;
-        [JsonIgnore]
-        private JToken LoggerConfig;
+        private DBCred LoggerConfig;
 
         public LoggingCore(ref SecurityCore SecCore)
         {
             this.SecCore = SecCore;
-
-            LoggerConfig = SecCore.GetProtectedInfo("DB_Logger");
-
-            dbConnectionString = LoggerConfig["ConnectionString"].Value<string>();
+            LoggerConfig = SecCore.Configuration.DBCreds.FirstOrDefault(c => c.DB == "Logger");
         }
 
         public void Info(string message)
@@ -37,7 +34,7 @@ namespace LoggingProvider
                 instance = SecCore.Instance
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -56,7 +53,7 @@ namespace LoggingProvider
                 category = "INFO"
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -78,7 +75,7 @@ namespace LoggingProvider
                 context = json
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -101,7 +98,7 @@ namespace LoggingProvider
                 context = json
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -124,7 +121,7 @@ namespace LoggingProvider
                 context = json
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -147,7 +144,7 @@ namespace LoggingProvider
                 context = json
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();
@@ -170,7 +167,7 @@ namespace LoggingProvider
                 context = json
             };
 
-            using (var db = new Logger(dbConnectionString))
+            using (var db = new Logger(LoggerConfig.ConnectionString))
             {
                 db.Entry(record).State = EntityState.Added;
                 db.SaveChanges();

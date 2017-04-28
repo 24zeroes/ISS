@@ -20,7 +20,7 @@ namespace Production
             Domain.SearchResult = Domain.DirectorySearcher.FindAll();
             foreach (SearchResult computer in Domain.SearchResult)
             {
-                using (var db = new CubeMonitoring(cubeConnectionString))
+                using (var db = new CubeMonitoring(DCConfig.ConnectionString))
                 {
                     int indexCN = computer.Path.IndexOf("CN=");
                     int indexComa = computer.Path.IndexOf(",");

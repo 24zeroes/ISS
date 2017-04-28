@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="Computers.cs" />
     <Compile Include="DCParser.cs" />
-    <Compile Include="Deserialize.cs" />
     <Compile Include="Groups.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserGroups.cs" />

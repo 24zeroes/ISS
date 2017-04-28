@@ -16,11 +16,12 @@ namespace ISS.Schedulers
 {
     class DCParserScheduler
     {
-        public static void Start(ref SecurityCore SecCore, ref LoggingCore log, int interval)
+        public static void Start(ref SecurityCore SecCore, ref LoggingCore log)
         {
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Start();
-
+            var temp = SecCore.Configuration.Applications.FirstOrDefault(a => a.Name == "DCParser");
+            int interval = temp.IntervalInMinutes;
             IJobDetail job = JobBuilder.Create<DCParser>().Build();
             job.JobDataMap["security"] = SecCore;
             job.JobDataMap["logging"] = log;

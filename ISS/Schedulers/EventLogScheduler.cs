@@ -14,10 +14,13 @@ namespace ISS.Schedulers
 {
     class EventLogScheduler
     {
-        public static void Start(ref SecurityCore SecCore, ref LoggingCore log, int interval)
+        public static void Start(ref SecurityCore SecCore, ref LoggingCore log)
         {
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Start();
+
+            var temp = SecCore.Configuration.Applications.FirstOrDefault(a => a.Name == "EventLogParser");
+            int interval = temp.IntervalInMinutes;
 
             IJobDetail job = JobBuilder.Create<EventLogParser>().Build();
             job.JobDataMap["security"] = SecCore;

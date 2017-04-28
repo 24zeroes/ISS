@@ -5,6 +5,7 @@ using System.DirectoryServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataLayer.Application_Models;
 using DataLayer.Application_Models.DC_Parser;
 using DataLayer.DB_Models.CubeMonitoring;
 using Newtonsoft.Json.Linq;
@@ -13,12 +14,12 @@ namespace Production
 {
     public partial class DCParser
     {
-        private void GetDomainGroups(JToken Domain)
+        private void GetDomainGroups(Domain domain)
         {
             DirectoryEntry entry;
 
 
-            entry = new DirectoryEntry("LDAP://" + Domain.First["DC"].Value<string>(), Domain.First["Username"].Value<string>(), Domain.First["Password"].Value<string>());
+            entry = new DirectoryEntry("LDAP://" + domain.DC, domain.Username, domain.Password);
 
 
             DirectorySearcher ds = new DirectorySearcher(entry);
@@ -28,26 +29,26 @@ namespace Production
             {
                 Groups.Add(new FullDomain
                 {
-                    DomainName = Domain.Path.Replace("DCParser.", ""),
+                    DomainName = domain.Name,
                     DirectorySearcher = ds,
                     SearchResult = ds.FindAll(),
                     GroupList = new List<Group>()
                 });
-                log.Info("Connected to domain sucessfull", Domain);
+                log.Info("Connected to domain sucessfull", domain);
             }
             catch (Exception ex)
             {
-                log.Exception("Connection to domain failed. Exception message:" + ex.Message, this.ToString(), Domain);
+                log.Exception("Connection to domain failed. Exception message:" + ex.Message, this.ToString(), domain);
             }
         }
 
-        private void UpdateDomainGroups(FullDomain Domain)
+        private void UpdateDomainGroups(FullDomain domain)
         {
-            log.Info($"Domain {Domain.DomainName} group update started", ToString());
+            log.Info($"Domain {domain.DomainName} group update started", ToString());
 
-            foreach (SearchResult group in Domain.SearchResult)
+            foreach (SearchResult group in domain.SearchResult)
             {
-                using (var db = new CubeMonitoring(cubeConnectionString))
+                using (var db = new CubeMonitoring(DCConfig.ConnectionString))
                 {
                     string Description = "";
                     string Name = group.Properties["name"][0].ToString();
@@ -80,7 +81,7 @@ namespace Production
                         {
                             GroupName = Name,
                             GroupDescription = Description,
-                            DomainId = Domain.DomainId,
+                            DomainId = domain.DomainId,
                             GroupDateModified = DateTime.Now,
                             GroupPath = Path,
 
@@ -90,7 +91,7 @@ namespace Production
 
                     }
 
-                    Domain.GroupList.Add(new Group
+                    domain.GroupList.Add(new Group
                     {
                         Id = CurrentGroup.id,
                         Name = CurrentGroup.GroupName
@@ -101,7 +102,7 @@ namespace Production
 
             }
 
-            log.Info($"Domain {Domain.DomainName} group update complited", ToString());
+            log.Info($"Domain {domain.DomainName} group update complited", ToString());
         }
     }
 }

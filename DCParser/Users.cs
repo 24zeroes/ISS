@@ -13,14 +13,14 @@ namespace Production
 {
     public partial class DCParser
     {
-        private void UpdateUsers(FullDomain Domain)
+        private void UpdateUsers(FullDomain domain)
         {
-            log.Info($"Domain {Domain.DomainName} user update started", ToString());
-            Domain.DirectorySearcher.Filter = "(&(objectClass=user))";
-            Domain.SearchResult = Domain.DirectorySearcher.FindAll();
-            foreach (SearchResult user in Domain.SearchResult)
+            log.Info($"Domain {domain.DomainName} user update started", ToString());
+            domain.DirectorySearcher.Filter = "(&(objectClass=user))";
+            domain.SearchResult = domain.DirectorySearcher.FindAll();
+            foreach (SearchResult user in domain.SearchResult)
             {
-                using (var db = new CubeMonitoring(cubeConnectionString))
+                using (var db = new CubeMonitoring(DCConfig.ConnectionString))
                 {
                     string sid;
                     try
@@ -86,7 +86,7 @@ namespace Production
                             UserFIO = UserFIO,
                             UserSID = UserSID,
                             UserPath = UserPath,
-                            DomainId = Domain.DomainId,
+                            DomainId = domain.DomainId,
                             UserDateModified = DateTime.Now
                         };
                         db.Entry(User).State = EntityState.Added;
@@ -95,7 +95,7 @@ namespace Production
                     }
                 }
             }
-            log.Info($"Domain {Domain.DomainName} user update complited", ToString());
+            log.Info($"Domain {domain.DomainName} user update complited", ToString());
         }
     }
 }
