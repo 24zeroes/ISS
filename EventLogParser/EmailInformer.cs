@@ -13,19 +13,19 @@ namespace Production
 {
     partial class EventLogParser
     {
-        void SendMail(string DomainName, OfficeDCEvents e)
+        void SendMail(string DomainName, OfficeDCEvents e, bool userField)
         {
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(EventLogParserEmail["From"].ToString());
+            mail.From = new MailAddress(EventLogConfig.EmailSettings.From);
             SmtpClient smtp = new SmtpClient();
-            smtp.Port = Int32.Parse(EventLogParserEmail["Port"].ToString());
-            smtp.EnableSsl = (EventLogParserEmail["Ssl"].ToString() == "1")? true : false;
+            smtp.Port = EventLogConfig.EmailSettings.Port;
+            smtp.EnableSsl = (EventLogConfig.EmailSettings.Ssl == 1)? true : false;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential(EventLogParserEmail["Login"].ToString(), EventLogParserEmail["Pass"].ToString());
-            smtp.Host = EventLogParserEmail["Host"].ToString();
+            smtp.Credentials = new NetworkCredential(EventLogConfig.EmailSettings.Login, EventLogConfig.EmailSettings.Pass);
+            smtp.Host = EventLogConfig.EmailSettings.Host;
 
-            foreach (string address in EventLogParserEmail["To"])
+            foreach (string address in EventLogConfig.EmailSettings.To)
             {
                 mail.To.Add(new MailAddress(address));
             }
@@ -41,9 +41,9 @@ namespace Production
             mail.Body = mail.Body + $"<tr align={Ecran}left{Ecran}><td>Объект изменения: </td><b><td>{e.TargetUserName}</td></tr></b>";
             mail.Body = mail.Body + $"<tr align={Ecran}left{Ecran}><td>Описание изменения: </td><b><td>{e.EventName}</td></tr></b>";
 
-            if (InEvenPool(e.EventId))
+            if (userField)
             {
-                var db = new CubeMonitoring(cubeConnectionString);
+                var db = new CubeMonitoring(DbConfig.ConnectionString);
                 var user = db.OfficeDCUsers.FirstOrDefault(u => u.id == e.GroupMemberId.Value);
                 mail.Body = mail.Body +
                             $"<tr align={Ecran}left{Ecran}><td>Пользователь: </td><b><td>{user.UserFIO}</td></tr></b>";

@@ -25,7 +25,7 @@ namespace Production
                 EventRecord record;
                 while ((record = reader.ReadEvent()) != null)
                 {
-                    string RecordTarget = GetRecordTarget(record.Id.ToString());
+                    var RecordTarget = EventLogConfig.Events.FirstOrDefault(e => e.id == record.Id);
                     if (RecordTarget != null)
                     {
                         Dictionary<string, string> task = new Dictionary<string, string>();
@@ -68,14 +68,6 @@ namespace Production
         
         }
 
-        private string GetRecordTarget(string Id)
-        {
-            var temp = EventFindConf("id", Id);
-            if (temp != null)
-                return temp["descr"].ToString();
-
-            return null;
-        }
 
         private OfficeDCEvents GetEventFromDict(Dictionary<string, string> task)
         {
@@ -119,8 +111,12 @@ namespace Production
 
             if (task.Keys.Contains("EventId"))
             {
-                Event.EventName = EventFindConf("id", task["EventId"])["descr"].ToString();
+                
+                
                 int EventId = Int32.Parse(task["EventId"]);
+
+                var temp = EventLogConfig.Events.FirstOrDefault(e => e.id == EventId);
+                Event.EventName = temp.id.ToString();
                 Event.EventId = EventId;
                 
             }

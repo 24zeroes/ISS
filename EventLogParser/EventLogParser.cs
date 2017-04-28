@@ -8,26 +8,24 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AppPattern;
+using DataLayer.Application_Models;
 using DataLayer.DB_Models.CubeMonitoring;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DataLayer.Application_Models.EventLog;
+using Quartz.Spi;
+using Application = AppPattern.Application;
 
 namespace Production
 {
     public partial class EventLogParser : Application
     {
         [JsonIgnore]
-        private JToken EventLogParserConfig;
-        [JsonIgnore]
-        private JToken EventLogParserDbConfig;
-        [JsonIgnore]
-        private string cubeConnectionString;
+        private EventConfig EventLogConfig;
 
-        private JToken EventLogParserEmail;
+        private DBCred DbConfig;
 
-        private JToken DomainConfig;
+        private List<DataLayer.Application_Models.Domain> DomainConfig;
 
         private List<EventRecord> EventRecords; 
 
@@ -35,22 +33,13 @@ namespace Production
         private string DomainName;
         private int DomainId;
 
-        private JToken EventFindConf(string Criteria, string WhatToSearch)
-        {
-            foreach (var item in EventLogParserConfig)
-            {
-                if (item[Criteria].Value<string>() == WhatToSearch)
-                    return item;
-            }
-            return null;
-        }
         public override void GetConfiguration()
         {
             SecCore.TaskStarted(id);
-            cubeConnectionString = SecCore.GetProtectedInfo("DB_Cube")["ConnectionString"].Value<string>();
-            EventLogParserConfig = SecCore.GetProtectedInfo("EventLogParser")["Config"];
-            EventLogParserEmail = SecCore.GetProtectedInfo("EventLogParser")["Email"];
-            DomainConfig = SecCore.GetProtectedInfo("DCParser");
+            EventLogConfig = SecCore.Configuration.EventConfig;
+            DbConfig = SecCore.Configuration.DBCreds.FirstOrDefault(c => c.DB == "Cube");
+
+            DomainConfig = SecCore.Configuration.Domains;
             log.Info("Initialisation sucessfull", this.ToString());
         }
 
@@ -69,131 +58,144 @@ namespace Production
             {
                 var Event = GetEventFromDict(task);
 
-                using (var db = new CubeMonitoring(cubeConnectionString))
+                using (var db = new CubeMonitoring(DbConfig.ConnectionString))
                 {
-                    if ((InEvenPool(Event.EventId))&&((db.OfficeDCEvents.FirstOrDefault(e => e.EventThumb == Event.EventThumb)) == null))
+                    if (((db.OfficeDCEvents.FirstOrDefault(e => e.EventThumb == Event.EventThumb)) == null))
                     {
-                        //SQL group
-                        string TargetGroupName = Event.TargetUserName;
-                        var temp_group = db.OfficeDCGroups.FirstOrDefault(g => g.GroupName == TargetGroupName);
-                        int TargetGroupId = temp_group.id;
-                        var Group = db.OfficeDCGroups.FirstOrDefault(g => g.GroupName == TargetGroupName);
-                        var select = from ug in db.OfficeDCUserGroups
-                                     join u in db.OfficeDCUsers
-                                     on ug.UserId equals u.id into group1
-                                     where (true)
-                                     from g1 in group1.DefaultIfEmpty()
-                                     where (ug.GroupId == Group.id)
-                                     select new User
-                                     {
-                                         UserId = ug.UserId,
-                                         UserName = g1.UserFIO
-                                     };
+                        //add
+                        //change
+                        //remove
+                        //target
+                        //locked
+                        //unlocked
+                        //on
 
-                        List<User> SQLUsers = new List<User>();
-                        foreach (User u in select)
+                        var TargetEvent = EventLogConfig.Events.FirstOrDefault(e => e.id == Event.id);
+
+                        if (TargetEvent.target.Contains("ug_"))
                         {
-                            SQLUsers.Add(new User
-                            {
-                                UserId = u.UserId,
-                                UserName = u.UserName
-                            });
-                        }
+                            //SQL group
+                            string TargetGroupName = Event.TargetUserName;
+                            var temp_group = db.OfficeDCGroups.FirstOrDefault(g => g.GroupName == TargetGroupName);
+                            int TargetGroupId = temp_group.id;
+                            var Group = db.OfficeDCGroups.FirstOrDefault(g => g.GroupName == TargetGroupName);
+                            var select = from ug in db.OfficeDCUserGroups
+                                         join u in db.OfficeDCUsers
+                                         on ug.UserId equals u.id into group1
+                                         where (true)
+                                         from g1 in group1.DefaultIfEmpty()
+                                         where (ug.GroupId == Group.id)
+                                         select new User
+                                         {
+                                             UserId = ug.UserId,
+                                             UserName = g1.UserFIO
+                                         };
 
-                        //AD group
-                        
-                        DirectoryEntry entry = new DirectoryEntry();
-                        foreach (var domain in DomainConfig)
-                        {
-                            if (Event.Computer.ToLower().Contains(domain.ToString().ToLower()))
+                            List<User> SQLUsers = new List<User>();
+                            foreach (User u in select)
                             {
-                                entry = new DirectoryEntry("LDAP://" + domain.First["DC"].Value<string>(),
-                                    domain.First["Username"].Value<string>(), domain.First["Password"].Value<string>());
-                                DomainName = domain.ToString();
-                                var temp =
-                                    db.Domains.FirstOrDefault(d => d.DomainName.ToLower().Contains(DomainName.ToLower()));
-                                Event.DomainId = temp.id;
-                            }
-                        }
-                        DirectorySearcher ds = new DirectorySearcher(entry);
-
-                        ds.Filter = String.Format("(&(cn={0})(objectClass=group))", TargetGroupName);
-                        ds.PropertiesToLoad.Add("member");
-                        SearchResultCollection sr = ds.FindAll();
-                        List<User> ADUsers = new List<User>();
-                        foreach (var UserCn in sr[0].Properties["member"])
-                        {
-                            string cn = UserCn.ToString();
-                            cn = cn.Substring(3, cn.IndexOf(",") - 3);
-                            var ADUser = db.OfficeDCUsers.FirstOrDefault(u => u.UserFIO == cn);
-                            if (ADUser != null)
-                            {
-                                ADUsers.Add(new User
-                                {
-                                    UserName = cn,
-                                    UserId = ADUser.id
-                                });
-                            }
-                        }
-
-                        //Added users
-                        List<User> addedUsers = new List<User>();
-
-                        //Removed users
-                        List<User> removedUsers = new List<User>();
-
-                        //Loop all ADUsers
-                        foreach (User u in ADUsers)
-                        {
-                            User toRemove = SQLUsers.Find(us => us.UserName == u.UserName);
-                            if (toRemove != null)
-                            {
-                                SQLUsers.Remove(toRemove);
-                            }
-                            else //add new users
-                            {
-                                OfficeDCUserGroups toAdd = new OfficeDCUserGroups
-                                {
-                                    GroupId = TargetGroupId,
-                                    UserId = u.UserId,
-                                    ModifiedDate = DateTime.Now
-                                };
-                                addedUsers.Add(new User
+                                SQLUsers.Add(new User
                                 {
                                     UserId = u.UserId,
                                     UserName = u.UserName
                                 });
-                                db.Entry(toAdd).State = EntityState.Added;
+                            }
+
+                            //AD group
+
+                            DirectoryEntry entry = new DirectoryEntry();
+                            foreach (var domain in DomainConfig)
+                            {
+                                if (domain.Name.ToLower().Contains(GetDomainName(Event.Computer)))
+                                {
+                                    entry = new DirectoryEntry("LDAP://" + domain.Name, domain.Username, domain.Password);
+                                    DomainName = domain.ToString();
+                                    var temp =
+                                        db.Domains.FirstOrDefault(d => d.DomainName.ToLower().Contains(DomainName.ToLower()));
+                                    Event.DomainId = temp.id;
+                                }
+                            }
+                            DirectorySearcher ds = new DirectorySearcher(entry);
+
+                            ds.Filter = String.Format("(&(cn={0})(objectClass=group))", TargetGroupName);
+                            ds.PropertiesToLoad.Add("member");
+                            SearchResultCollection sr = ds.FindAll();
+                            List<User> ADUsers = new List<User>();
+                            foreach (var UserCn in sr[0].Properties["member"])
+                            {
+                                string cn = UserCn.ToString();
+                                cn = cn.Substring(3, cn.IndexOf(",") - 3);
+                                var ADUser = db.OfficeDCUsers.FirstOrDefault(u => u.UserFIO == cn);
+                                if (ADUser != null)
+                                {
+                                    ADUsers.Add(new User
+                                    {
+                                        UserName = cn,
+                                        UserId = ADUser.id
+                                    });
+                                }
+                            }
+
+                            //Added users
+                            List<User> addedUsers = new List<User>();
+
+                            //Removed users
+                            List<User> removedUsers = new List<User>();
+
+                            //Loop all ADUsers
+                            foreach (User u in ADUsers)
+                            {
+                                User toRemove = SQLUsers.Find(us => us.UserName == u.UserName);
+                                if (toRemove != null)
+                                {
+                                    SQLUsers.Remove(toRemove);
+                                }
+                                else //add new users
+                                {
+                                    OfficeDCUserGroups toAdd = new OfficeDCUserGroups
+                                    {
+                                        GroupId = TargetGroupId,
+                                        UserId = u.UserId,
+                                        ModifiedDate = DateTime.Now
+                                    };
+                                    addedUsers.Add(new User
+                                    {
+                                        UserId = u.UserId,
+                                        UserName = u.UserName
+                                    });
+                                    db.Entry(toAdd).State = EntityState.Added;
+                                    db.SaveChanges();
+                                }
+
+                            }
+
+                            //Loop all remaining SQL users
+                            foreach (User u in SQLUsers)
+                            {
+                                var toRemove = db.OfficeDCUserGroups.FirstOrDefault(ug => ((ug.UserId == u.UserId) && (ug.GroupId == TargetGroupId)));
+                                removedUsers.Add(new User
+                                {
+                                    UserId = u.UserId,
+                                    UserName = u.UserName
+                                });
+                                db.Entry(toRemove).State = EntityState.Deleted;
                                 db.SaveChanges();
                             }
 
-                        }
-
-                        //Loop all remaining SQL users
-                        foreach (User u in SQLUsers)
-                        {
-                            var toRemove = db.OfficeDCUserGroups.FirstOrDefault(ug => ((ug.UserId == u.UserId) && (ug.GroupId == TargetGroupId)));
-                            removedUsers.Add(new User
+                            if (TargetEvent.target.Contains("add"))
                             {
-                                UserId = u.UserId,
-                                UserName = u.UserName
-                            });
-                            db.Entry(toRemove).State = EntityState.Deleted;
-                            db.SaveChanges();
+                                Event.GroupMemberId = addedUsers[0].UserId;
+                            }
+                            else
+                            {
+                                Event.GroupMemberId = removedUsers[0].UserId;
+                            }
                         }
 
-                        if (IsAddEvent(Event.EventId))
+                        if (TargetEvent.notificate == 1)
                         {
-                            Event.GroupMemberId = addedUsers[0].UserId;
-                        }
-                        else
-                        {
-                            Event.GroupMemberId = removedUsers[0].UserId;
-                        }
-
-                        if (InEventMailNotifPool(Event.EventId))
-                        {
-                            SendMail(DomainName, Event);
+                            
+                            SendMail(DomainName, Event, TargetEvent.target.Contains("ug_"));
                         }
 
                         log.Info("Event added to db", this.ToString(), Event);
@@ -216,6 +218,12 @@ namespace Production
         {
         }
 
+        private string GetDomainName(string fqdn)
+        {
+            int startIndex = fqdn.IndexOf(".");
+            int endIndex = fqdn.LastIndexOf(".");
+            return fqdn.Substring(startIndex + 1, endIndex - (startIndex + 1));
+        }
         private string Hash(string Input)
         {
             byte[] lul = Encoding.ASCII.GetBytes(Input);
@@ -234,50 +242,6 @@ namespace Production
                               + Event.Computer + Event.EventId + Event.DomainId;
         }
 
-        private bool InEvenPool(int id)
-        {
-            if (
-                (id == 4728) ||
-                (id == 4729) ||
-                (id == 4732) ||
-                (id == 4733) ||
-                (id == 4756) ||
-                (id == 4757)
-            )
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool IsAddEvent(int id)
-        {
-            if (
-                (id == 4728) ||
-                (id == 4732) ||
-                (id == 4756)
-            )
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool InEventMailNotifPool(int id)
-        {
-            if (
-                (id == 4728) ||
-                (id == 4729) ||
-                (id == 4732) ||
-                (id == 4733) ||
-                (id == 4756) ||
-                (id == 4757) ||
-                (id == 4720)
-            )
-            {
-                return true;
-            }
-            return false;
-        }
+       
     }
 }

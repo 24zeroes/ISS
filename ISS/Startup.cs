@@ -73,14 +73,14 @@ namespace ISS
             #region DCParser_SCHEDULER
             //Testing to schedule DCParser
         
-            DCParserScheduler.Start(ref SecCore, ref log);
+            //DCParserScheduler.Start(ref SecCore, ref log);
 
             
 
             #endregion
 
             #region EventLogParser
-                //EventLogScheduler.Start(ref SecCore, ref log);
+            EventLogScheduler.Start(ref SecCore, ref log);
             #endregion
         }
 

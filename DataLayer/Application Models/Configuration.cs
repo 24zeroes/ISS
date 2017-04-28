@@ -28,9 +28,10 @@ namespace DataLayer.Application_Models
 
     public class Event
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string descr { get; set; }
         public string target { get; set; }
+        public int notificate { get; set; }
     }
 
     public class EmailSettings

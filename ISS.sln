@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCParser", "DCParser\DCPars
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogParser", "EventLogParser\EventLogParser.csproj", "{0D03E9DF-5D79-4DDF-B227-725517A2AA20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{D69AE5A7-36CA-4718-BEE4-448C597B14B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{0D03E9DF-5D79-4DDF-B227-725517A2AA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D03E9DF-5D79-4DDF-B227-725517A2AA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D03E9DF-5D79-4DDF-B227-725517A2AA20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69AE5A7-36CA-4718-BEE4-448C597B14B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69AE5A7-36CA-4718-BEE4-448C597B14B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69AE5A7-36CA-4718-BEE4-448C597B14B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69AE5A7-36CA-4718-BEE4-448C597B14B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
